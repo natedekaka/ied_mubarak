@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Selamat Idul Fitri - natedekaka</title>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #0f4c3a;
+            --secondary: #d4af37;
+            --text-light: #f4f4f4;
+            --bg-overlay: rgba(0, 0, 0, 0.5);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body, html {
+            height: 100%;
+            font-family: 'Poppins', sans-serif;
+            overflow: hidden;
+            background-color: var(--primary);
+        }
+
+        #bg-image {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+            transition: opacity 1.5s ease-in-out;
+            z-index: -2;
+        }
+
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, transparent 20%, var(--primary) 150%);
+            background-color: var(--bg-overlay);
+            z-index: -1;
+        }
+
+        .container {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 20px;
+            color: var(--text-light);
+        }
+
+        .greeting-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(8px);
+            padding: 40px 30px;
+            border-radius: 20px;
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            max-width: 600px;
+            width: 90%;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            animation: fadeIn 2s ease-out;
+        }
+
+        h1 {
+            font-family: 'Dancing Script', cursive;
+            font-size: 3.5rem;
+            color: var(--secondary);
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            animation: float 4s ease-in-out infinite;
+        }
+
+        .message {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin-bottom: 25px;
+            min-height: 80px;
+            font-style: italic;
+        }
+
+        .signature {
+            font-weight: 600;
+            letter-spacing: 2px;
+            color: var(--secondary);
+        }
+
+        /* Floating Elements */
+        .floating-item {
+            position: absolute;
+            pointer-events: none;
+            opacity: 0.6;
+            z-index: 0;
+            animation: float-random 20s linear infinite;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        @keyframes float-random {
+            0% { transform: translate(0, 100vh) rotate(0deg); opacity: 0; }
+            10% { opacity: 0.6; }
+            90% { opacity: 0.6; }
+            100% { transform: translate(100px, -100px) rotate(360deg); opacity: 0; }
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            h1 { font-size: 2.5rem; }
+            .message { font-size: 1rem; }
+        }
+
+        /* Music Toggle */
+        .audio-btn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: var(--secondary);
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 20px;
+            z-index: 100;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="bg-image"></div>
+    <div class="overlay"></div>
+
+    <div class="container">
+        <div class="greeting-card">
+            <h1>Idul Fitri Mubarak</h1>
+            <div class="message" id="dynamic-text">
+                Memuat pesan keberkahan...
+            </div>
+            <div class="signature">natedekaka</div>
+        </div>
+    </div>
+
+    <!-- Floating Ketupat Icons (SVG) -->
+    <div id="floating-container"></div>
+
+    <script>
+        const messages = [
+            "Sebening embun pagi, seputih kapas yang suci. Mari kita rajut kembali ukhuwah yang sempat terputus dengan maaf yang tulus.",
+            "Gema takbir bukan hanya tanda kemenangan, tapi panggilan untuk kembali ke fitrah. Selamat Lebaran, maaf lahir dan batin.",
+            "Hati yang jernih adalah sebaik-baiknya tempat berteduh. Maafkan jika lisan pernah melukai, maafkan jika langkah pernah salah.",
+            "Di hari yang suci ini, biarkan kasih sayang mengalir deras seperti air, menyejukkan jiwa dan mendamaikan semesta.",
+            "Bukan baju baru yang utama, tapi hati yang diperbarui dengan ampunan-Nya. Selamat Idul Fitri untukmu dan keluarga.",
+            "Kita mungkin tak bisa berjabat tangan, namun doa ini tulus melintasi ruang dan waktu untuk menyapamu di hari yang fitri."
+        ];
+
+        const images = [
+            "https://images.unsplash.com/photo-1598048145816-43516339480d?auto=format&fit=crop&q=80&w=1600",
+            "https://images.unsplash.com/photo-1564769641470-87a3939615a1?auto=format&fit=crop&q=80&w=1600",
+            "https://images.unsplash.com/photo-1551041777-ed0764a3958c?auto=format&fit=crop&q=80&w=1600",
+            "https://images.unsplash.com/photo-1542640244-7e672d6cef21?auto=format&fit=crop&q=80&w=1600"
+        ];
+
+        let msgIndex = 0;
+        let imgIndex = 0;
+
+        function updateContent() {
+            const textElement = document.getElementById('dynamic-text');
+            const bgElement = document.getElementById('bg-image');
+
+            // Fade out effect
+            textElement.style.opacity = 0;
+            bgElement.style.opacity = 0;
+
+            setTimeout(() => {
+                // Change Content
+                textElement.innerText = messages[msgIndex];
+                bgElement.style.backgroundImage = `url('${images[imgIndex]}')`;
+
+                // Fade in effect
+                textElement.style.opacity = 1;
+                bgElement.style.opacity = 1;
+
+                msgIndex = (msgIndex + 1) % messages.length;
+                imgIndex = (imgIndex + 1) % images.length;
+            }, 1000);
+        }
+
+        // Floating Icons Generator
+        function createFloatingIcon() {
+            const container = document.getElementById('floating-container');
+            const icon = document.createElement('div');
+            icon.className = 'floating-item';
+            
+            // Randomize position and duration
+            const left = Math.random() * 100;
+            const size = Math.random() * (40 - 20) + 20;
+            const duration = Math.random() * (25 - 15) + 15;
+            
+            icon.style.left = left + '%';
+            icon.style.fontSize = size + 'px';
+            icon.style.animationDuration = duration + 's';
+            
+            // Random icon (Mosque or Star/Moon or Ketupat placeholder)
+            const icons = ['🌙', '⭐', '🕌', '🕯️'];
+            icon.innerText = icons[Math.floor(Math.random() * icons.length)];
+            
+            container.appendChild(icon);
+            
+            // Remove after animation ends
+            setTimeout(() => {
+                icon.remove();
+            }, duration * 1000);
+        }
+
+        // Initialize
+        updateContent();
+        setInterval(updateContent, 8000); // Change every 8 seconds
+        setInterval(createFloatingIcon, 1500); // New icon every 1.5 seconds
+
+        // Add some CSS transitions for dynamic-text
+        document.getElementById('dynamic-text').style.transition = 'opacity 1s ease-in-out';
+    </script>
+</body>
+</html>
