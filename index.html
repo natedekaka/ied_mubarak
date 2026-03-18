@@ -4,11 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Eid Mubarak 1447 H - natedekaka</title>
-    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Plus+Jakarta+Sans:wght@300;400;600;800&family=Reem+Kufi:wght@700&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+        :root {
+            --theme-primary: #064e3b;
+            --theme-accent: #facc15;
+            --theme-bg: #021511;
+        }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: var(--theme-bg); transition: background-color 0.5s ease; }
         .font-arabic { font-family: 'Reem Kufi', sans-serif; }
         .font-script { font-family: 'Dancing Script', cursive; }
         
@@ -21,7 +25,7 @@
 
         @keyframes float {
             0%, 100% { transform: translateY(0) rotate(0deg); }
-            50% { transform: translateY(-15px) rotate(2deg); }
+            50% { transform: translateY(-15px) rotate(1deg); }
         }
         .animate-float { animation: float 6s ease-in-out infinite; }
         
@@ -31,57 +35,66 @@
             left: 0;
             width: 100%;
             height: 100%;
-            z-index: 10;
+            z-index: 5;
             pointer-events: none;
         }
 
-        .neon-glow {
-            text-shadow: 0 0 10px rgba(212, 175, 55, 0.5), 0 0 20px rgba(212, 175, 55, 0.3);
+        .theme-btn {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 2px solid white;
+            transition: transform 0.3s ease;
         }
+        .theme-btn:hover { transform: scale(1.2); }
     </style>
 </head>
-<body class="bg-[#021511] text-white overflow-hidden">
+<body class="text-white overflow-hidden">
 
     <!-- Background Layer -->
     <div class="fixed inset-0 z-0">
-        <div class="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,#064e3b,transparent_70%)] opacity-50"></div>
-        <div id="bg-img" class="absolute inset-0 bg-cover bg-center transition-all duration-1000 opacity-30 scale-110"></div>
+        <div id="dynamic-gradient" class="absolute inset-0 opacity-50" style="background: radial-gradient(circle at 50% 50%, var(--theme-primary), transparent 70%);"></div>
+        <div id="bg-img" class="absolute inset-0 bg-cover bg-center transition-all duration-1000 opacity-20 scale-110"></div>
     </div>
 
     <canvas id="fireworks-canvas"></canvas>
 
-    <!-- UI Overlay -->
+    <!-- Color Picker Floating -->
+    <div class="fixed top-6 right-6 z-50 flex flex-col gap-3 glass p-3 rounded-2xl shadow-xl">
+        <div class="theme-btn bg-emerald-700" onclick="setTheme('#064e3b', '#facc15', '#021511')" title="Emerald"></div>
+        <div class="theme-btn bg-purple-800" onclick="setTheme('#4c1d95', '#fbbf24', '#0f0720')" title="Royal"></div>
+        <div class="theme-btn bg-blue-900" onclick="setTheme('#1e3a8a', '#60a5fa', '#050b1a')" title="Midnight"></div>
+        <div class="theme-btn bg-red-900" onclick="setTheme('#7f1d1d', '#f87171', '#1a0505')" title="Crimson"></div>
+    </div>
+
+    <!-- UI Main Content -->
     <main class="relative z-20 h-screen w-screen flex flex-col items-center justify-center p-6">
         
-        <!-- Start Button (To bypass Autoplay block) -->
-        <div id="overlay-start" class="fixed inset-0 z-50 flex items-center justify-center bg-[#021511]">
-            <button onclick="startCelebration()" class="px-8 py-4 bg-yellow-500 hover:bg-yellow-400 text-emerald-950 font-bold rounded-full transition-all transform hover:scale-110 active:scale-95 shadow-[0_0_30px_rgba(234,179,8,0.4)]">
-                Mulai Rayakan ✨
-            </button>
-        </div>
-
-        <!-- Main Card -->
-        <div class="glass max-w-md w-full rounded-[2.5rem] p-8 md:p-12 text-center animate-float shadow-2xl relative overflow-hidden">
-            <!-- Decorative Light -->
-            <div class="absolute -top-10 -left-10 w-32 h-32 bg-yellow-500/20 blur-3xl"></div>
+        <div class="glass max-w-md w-full rounded-[3rem] p-10 md:p-14 text-center animate-float shadow-2xl relative overflow-hidden">
+            <!-- Decorative Glow -->
+            <div id="accent-glow" class="absolute -top-10 -left-10 w-40 h-40 opacity-20 blur-3xl" style="background-color: var(--theme-accent);"></div>
             
-            <div class="font-arabic text-yellow-500 text-2xl mb-4 tracking-widest opacity-80">عيد مبارك</div>
+            <div class="font-arabic text-2xl mb-4 tracking-widest opacity-80 transition-colors" style="color: var(--theme-accent);">عيد مبارك</div>
             
-            <h1 class="font-script text-5xl md:text-6xl text-yellow-400 mb-6 neon-glow">Idul Fitri 1447 H</h1>
+            <h1 class="font-script text-5xl md:text-6xl mb-8 transition-colors drop-shadow-lg" style="color: var(--theme-accent);">Idul Fitri 1447 H</h1>
             
-            <div class="h-40 flex items-center justify-center mb-8">
-                <p id="genz-text" class="text-lg md:text-xl font-light leading-relaxed italic text-emerald-50 transition-all duration-500">
+            <div class="h-44 flex items-center justify-center mb-8">
+                <p id="genz-text" class="text-lg md:text-xl font-light leading-relaxed italic text-white transition-all duration-700">
                     Slay hari kemenangan...
                 </p>
             </div>
 
             <div class="pt-8 border-t border-white/10">
-                <p class="text-xs tracking-[0.3em] uppercase text-yellow-500/70 font-bold mb-1">Created with Vibes by</p>
-                <p class="text-lg font-bold text-white tracking-widest">natedekaka</p>
+                <p class="text-[10px] tracking-[0.4em] uppercase opacity-50 font-bold mb-2">Vibes by</p>
+                <p class="text-xl font-extrabold tracking-widest uppercase">natedekaka</p>
             </div>
         </div>
 
-        <p class="mt-12 text-emerald-500/50 text-xs tracking-widest uppercase">Auto Fireworks & Lo-fi Vibes Active</p>
+        <div class="mt-8 flex items-center gap-2 opacity-40 hover:opacity-100 transition-opacity cursor-help">
+            <span class="text-xs uppercase tracking-widest">Auto Play Active</span>
+            <div class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
+        </div>
     </main>
 
     <!-- Audio Elements -->
@@ -93,7 +106,17 @@
     </audio>
 
     <script>
-        // --- Gen Z Messages ---
+        // --- Theme Logic ---
+        function setTheme(primary, accent, bg) {
+            document.documentElement.style.setProperty('--theme-primary', primary);
+            document.documentElement.style.setProperty('--theme-accent', accent);
+            document.documentElement.style.setProperty('--theme-bg', bg);
+            
+            document.getElementById('dynamic-gradient').style.background = `radial-gradient(circle at 50% 50%, ${primary}, transparent 70%)`;
+            document.body.style.backgroundColor = bg;
+        }
+
+        // --- Gen Z Content ---
         const messages = [
             "POV: Lu dapet maaf dari doi pas Lebaran. No cap, ini vibes paling adem. Minal Aidin Wal Faizin, Bestie! ✨",
             "Slay hari raya dengan hati yang bersih. Skip drama, fokus berkah. Maafin segala khilaf gue ya, lowkey sering khilaf! 🙏",
@@ -116,22 +139,29 @@
         const sfxPop = document.getElementById('sfx-pop');
 
         function rotateContent() {
-            textEl.classList.add('opacity-0', 'translate-y-4');
+            textEl.style.opacity = '0';
+            textEl.style.transform = 'translateY(10px)';
             setTimeout(() => {
                 textEl.innerText = messages[mIdx];
                 bgEl.style.backgroundImage = `url('${images[iIdx]}')`;
-                textEl.classList.remove('opacity-0', 'translate-y-4');
+                textEl.style.opacity = '1';
+                textEl.style.transform = 'translateY(0)';
                 mIdx = (mIdx + 1) % messages.length;
                 iIdx = (iIdx + 1) % images.length;
-            }, 600);
+            }, 700);
         }
 
-        function startCelebration() {
-            document.getElementById('overlay-start').style.display = 'none';
-            bgm.volume = 0.4;
-            bgm.play().catch(e => console.log("Audio play blocked"));
-            setInterval(rotateContent, 7000);
-            rotateContent();
+        // --- Aggressive Autoplay Logic ---
+        function attemptPlay() {
+            bgm.volume = 0.3;
+            bgm.play().then(() => {
+                console.log("Autoplay success!");
+            }).catch(() => {
+                console.log("Autoplay waiting for interaction...");
+                // Jika gagal, mainkan di interaksi pertama (click/scroll/touch)
+                document.addEventListener('click', () => bgm.play(), { once: true });
+                document.addEventListener('touchstart', () => bgm.play(), { once: true });
+            });
         }
 
         // --- Fireworks System ---
@@ -151,15 +181,11 @@
                 this.x = x;
                 this.y = y;
                 this.color = color;
-                this.radius = Math.random() * 2 + 1;
-                this.velocity = {
-                    x: (Math.random() - 0.5) * 8,
-                    y: (Math.random() - 0.5) * 8
-                };
+                this.radius = Math.random() * 2 + 0.5;
+                this.velocity = { x: (Math.random() - 0.5) * 8, y: (Math.random() - 0.5) * 8 };
                 this.life = 100;
                 this.opacity = 1;
             }
-
             draw() {
                 ctx.beginPath();
                 ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
@@ -167,37 +193,37 @@
                 ctx.globalAlpha = this.opacity;
                 ctx.fill();
             }
-
             update() {
                 this.velocity.y += 0.05;
                 this.x += this.velocity.x;
                 this.y += this.velocity.y;
-                this.life -= 1.2;
-                this.opacity = this.life / 100;
+                this.life -= 1.5;
+                this.opacity = Math.max(0, this.life / 100);
             }
         }
 
         function explode() {
-            if(document.getElementById('overlay-start').style.display === 'none') {
-                const x = Math.random() * canvas.width;
-                const y = Math.random() * (canvas.height * 0.7);
-                const colors = ['#facc15', '#ffffff', '#fbbf24', '#34d399', '#f472b6', '#60a5fa'];
-                const color = colors[Math.floor(Math.random() * colors.length)];
-                
-                // Play SFX
-                const clonePop = sfxPop.cloneNode();
-                clonePop.volume = 0.2;
-                clonePop.play();
+            const x = Math.random() * canvas.width;
+            const y = Math.random() * (canvas.height * 0.7);
+            const accentColor = getComputedStyle(document.documentElement).getPropertyValue('--theme-accent').trim();
+            const colors = [accentColor, '#ffffff', '#fbbf24', '#f472b6', '#60a5fa'];
+            const color = colors[Math.floor(Math.random() * colors.length)];
+            
+            // SFX Play
+            const clonePop = sfxPop.cloneNode();
+            clonePop.volume = 0.15;
+            clonePop.play().catch(() => {});
 
-                for (let i = 0; i < 40; i++) {
-                    particles.push(new Particle(x, y, color));
-                }
+            for (let i = 0; i < 35; i++) {
+                particles.push(new Particle(x, y, color));
             }
         }
 
         function animate() {
-            ctx.fillStyle = 'rgba(2, 21, 17, 0.2)';
+            ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--theme-bg').trim();
+            ctx.globalAlpha = 0.2;
             ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.globalAlpha = 1;
 
             particles.forEach((p, i) => {
                 if (p.life > 0) {
@@ -210,8 +236,14 @@
             requestAnimationFrame(animate);
         }
 
-        setInterval(explode, 1500);
-        animate();
+        // --- Start Everything on Load ---
+        window.addEventListener('DOMContentLoaded', () => {
+            attemptPlay();
+            setInterval(rotateContent, 7000);
+            rotateContent();
+            setInterval(explode, 1400);
+            animate();
+        });
 
     </script>
 </body>
