@@ -3,197 +3,138 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Selamat Idul Fitri - natedekaka</title>
-    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Poppins:wght@300;400;600&family=Reem+Kufi:wght@700&display=swap" rel="stylesheet">
+    <title>Eid Mubarak 1447 H - natedekaka</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Plus+Jakarta+Sans:wght@300;400;600;800&family=Reem+Kufi:wght@700&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --primary: #051d16;
-            --secondary: #d4af37;
-            --accent: #ffd700;
-            --text-light: #ffffff;
-            --bg-overlay: rgba(0, 0, 0, 0.7);
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+        .font-arabic { font-family: 'Reem Kufi', sans-serif; }
+        .font-script { font-family: 'Dancing Script', cursive; }
+        
+        .glass {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-15px) rotate(2deg); }
         }
-
-        body, html {
-            height: 100%;
-            width: 100%;
-            font-family: 'Poppins', sans-serif;
-            overflow: hidden;
-            background-color: var(--primary);
-        }
-
-        /* Layering System */
-        #bg-image {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-size: cover;
-            background-position: center;
-            z-index: 1;
-            transition: opacity 1.5s ease;
-        }
-
-        .overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: radial-gradient(circle, transparent 20%, var(--primary) 100%);
-            background-color: var(--bg-overlay);
-            z-index: 2;
-        }
-
+        .animate-float { animation: float 6s ease-in-out infinite; }
+        
         #fireworks-canvas {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            z-index: 3; /* Pastikan di atas overlay & background */
+            z-index: 10;
             pointer-events: none;
         }
 
-        .main-content {
-            position: relative;
-            height: 100%;
-            width: 100%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 10; /* Di atas segalanya */
-            padding: 20px;
-        }
-
-        .card {
-            background: rgba(255, 255, 255, 0.08);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border: 1px solid rgba(212, 175, 55, 0.3);
-            border-radius: 25px;
-            padding: 40px 25px;
-            max-width: 500px;
-            width: 100%;
-            text-align: center;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
-            animation: fadeInScale 1.2s ease-out;
-        }
-
-        .calligraphy {
-            font-family: 'Reem Kufi', sans-serif;
-            font-size: 1.4rem;
-            color: var(--secondary);
-            margin-bottom: 10px;
-            letter-spacing: 4px;
-        }
-
-        h1 {
-            font-family: 'Dancing Script', cursive;
-            font-size: 3rem;
-            color: var(--accent);
-            margin-bottom: 20px;
-            line-height: 1.2;
-            text-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
-        }
-
-        .message-container {
-            min-height: 120px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .message {
-            font-size: 1.05rem;
-            line-height: 1.7;
-            font-style: italic;
-            color: #e0e0e0;
-            transition: opacity 0.6s ease;
-        }
-
-        .signature {
-            margin-top: 25px;
-            padding-top: 15px;
-            border-top: 1px solid rgba(212, 175, 55, 0.2);
-            font-weight: 600;
-            letter-spacing: 3px;
-            color: var(--secondary);
-            font-size: 0.85rem;
-            text-transform: uppercase;
-        }
-
-        /* Animations */
-        @keyframes fadeInScale {
-            from { opacity: 0; transform: scale(0.9); }
-            to { opacity: 1; transform: scale(1); }
-        }
-
-        /* Responsive Mobile Fixes */
-        @media (max-width: 400px) {
-            h1 { font-size: 2.3rem; }
-            .card { padding: 30px 20px; }
-            .message { font-size: 0.95rem; }
+        .neon-glow {
+            text-shadow: 0 0 10px rgba(212, 175, 55, 0.5), 0 0 20px rgba(212, 175, 55, 0.3);
         }
     </style>
 </head>
-<body>
+<body class="bg-[#021511] text-white overflow-hidden">
 
-    <div id="bg-image"></div>
-    <div class="overlay"></div>
-    <canvas id="fireworks-canvas"></canvas>
-
-    <div class="main-content">
-        <div class="card">
-            <div class="calligraphy">عيد مبارك</div>
-            <h1>Idul Fitri 1447 H</h1>
-            <div class="message-container">
-                <div class="message" id="text-display">Menyambut hari yang fitri...</div>
-            </div>
-            <div class="signature">natedekaka</div>
-        </div>
+    <!-- Background Layer -->
+    <div class="fixed inset-0 z-0">
+        <div class="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,#064e3b,transparent_70%)] opacity-50"></div>
+        <div id="bg-img" class="absolute inset-0 bg-cover bg-center transition-all duration-1000 opacity-30 scale-110"></div>
     </div>
 
+    <canvas id="fireworks-canvas"></canvas>
+
+    <!-- UI Overlay -->
+    <main class="relative z-20 h-screen w-screen flex flex-col items-center justify-center p-6">
+        
+        <!-- Start Button (To bypass Autoplay block) -->
+        <div id="overlay-start" class="fixed inset-0 z-50 flex items-center justify-center bg-[#021511]">
+            <button onclick="startCelebration()" class="px-8 py-4 bg-yellow-500 hover:bg-yellow-400 text-emerald-950 font-bold rounded-full transition-all transform hover:scale-110 active:scale-95 shadow-[0_0_30px_rgba(234,179,8,0.4)]">
+                Mulai Rayakan ✨
+            </button>
+        </div>
+
+        <!-- Main Card -->
+        <div class="glass max-w-md w-full rounded-[2.5rem] p-8 md:p-12 text-center animate-float shadow-2xl relative overflow-hidden">
+            <!-- Decorative Light -->
+            <div class="absolute -top-10 -left-10 w-32 h-32 bg-yellow-500/20 blur-3xl"></div>
+            
+            <div class="font-arabic text-yellow-500 text-2xl mb-4 tracking-widest opacity-80">عيد مبارك</div>
+            
+            <h1 class="font-script text-5xl md:text-6xl text-yellow-400 mb-6 neon-glow">Idul Fitri 1447 H</h1>
+            
+            <div class="h-40 flex items-center justify-center mb-8">
+                <p id="genz-text" class="text-lg md:text-xl font-light leading-relaxed italic text-emerald-50 transition-all duration-500">
+                    Slay hari kemenangan...
+                </p>
+            </div>
+
+            <div class="pt-8 border-t border-white/10">
+                <p class="text-xs tracking-[0.3em] uppercase text-yellow-500/70 font-bold mb-1">Created with Vibes by</p>
+                <p class="text-lg font-bold text-white tracking-widest">natedekaka</p>
+            </div>
+        </div>
+
+        <p class="mt-12 text-emerald-500/50 text-xs tracking-widest uppercase">Auto Fireworks & Lo-fi Vibes Active</p>
+    </main>
+
+    <!-- Audio Elements -->
+    <audio id="bgm" loop preload="auto">
+        <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="sfx-pop" preload="auto">
+        <source src="https://assets.mixkit.co/active_storage/sfx/2571/2571-preview.mp3" type="audio/mpeg">
+    </audio>
+
     <script>
-        // --- Content Data ---
+        // --- Gen Z Messages ---
         const messages = [
-            "Sebening embun pagi, seputih kapas yang suci. Mari kita rajut kembali ukhuwah dengan maaf yang tulus.",
-            "Hati yang jernih adalah sebaik-baiknya tempat berteduh. Maafkan jika lisan pernah melukai, maafkan jika langkah pernah salah.",
-            "Di hari yang suci ini, biarkan kasih sayang mengalir deras seperti air, menyejukkan jiwa dan mendamaikan semesta.",
-            "Bukan baju baru yang utama, tapi hati yang diperbarui dengan ampunan-Nya. Selamat Idul Fitri 1447 H.",
-            "Gema takbir memanggil kita kembali ke fitrah. Selamat Lebaran, mohon maaf lahir dan batin untukmu sekeluarga."
+            "POV: Lu dapet maaf dari doi pas Lebaran. No cap, ini vibes paling adem. Minal Aidin Wal Faizin, Bestie! ✨",
+            "Slay hari raya dengan hati yang bersih. Skip drama, fokus berkah. Maafin segala khilaf gue ya, lowkey sering khilaf! 🙏",
+            "Minal Aidin Wal Faizin! Semoga rejeki lu tumpah-tumpah kayak kuah opor. Stay halal, stay slay! 🌙",
+            "Lebaran vibes check: Hati suci, baju baru (optional), maaf-maafan (mandatory). Happy Eid Mubarak, fam! 🔥",
+            "Otw fitrah lagi nih. Maaf lahir batin ya, kalo ada salah kata yang gak banget. Let's start a new chapter! 🍃",
+            "Gak kerasa udah lebaran aja. Hati kudu glowing lahir batin. Maafin kesalahan gue yang kemaren-kemaren ya! 🤲"
         ];
 
         const images = [
             "https://images.unsplash.com/photo-1598048145816-43516339480d?auto=format&fit=crop&q=80&w=1200",
-            "https://images.unsplash.com/photo-1518005020250-675f0f0fd13b?auto=format&fit=crop&q=80&w=1200",
-            "https://images.unsplash.com/photo-1542332213-31f87348057f?auto=format&fit=crop&q=80&w=1200"
+            "https://images.unsplash.com/photo-1542332213-31f87348057f?auto=format&fit=crop&q=80&w=1200",
+            "https://images.unsplash.com/photo-1564769641470-87a3939615a1?auto=format&fit=crop&q=80&w=1200"
         ];
 
         let mIdx = 0, iIdx = 0;
+        const textEl = document.getElementById('genz-text');
+        const bgEl = document.getElementById('bg-img');
+        const bgm = document.getElementById('bgm');
+        const sfxPop = document.getElementById('sfx-pop');
 
         function rotateContent() {
-            const txt = document.getElementById('text-display');
-            const bg = document.getElementById('bg-image');
-            
-            txt.style.opacity = 0;
+            textEl.classList.add('opacity-0', 'translate-y-4');
             setTimeout(() => {
-                txt.innerText = messages[mIdx];
-                bg.style.backgroundImage = `url('${images[iIdx]}')`;
-                txt.style.opacity = 1;
+                textEl.innerText = messages[mIdx];
+                bgEl.style.backgroundImage = `url('${images[iIdx]}')`;
+                textEl.classList.remove('opacity-0', 'translate-y-4');
                 mIdx = (mIdx + 1) % messages.length;
                 iIdx = (iIdx + 1) % images.length;
             }, 600);
         }
 
-        // --- Automatic Fireworks Logic ---
+        function startCelebration() {
+            document.getElementById('overlay-start').style.display = 'none';
+            bgm.volume = 0.4;
+            bgm.play().catch(e => console.log("Audio play blocked"));
+            setInterval(rotateContent, 7000);
+            rotateContent();
+        }
+
+        // --- Fireworks System ---
         const canvas = document.getElementById('fireworks-canvas');
         const ctx = canvas.getContext('2d');
         let particles = [];
@@ -212,8 +153,8 @@
                 this.color = color;
                 this.radius = Math.random() * 2 + 1;
                 this.velocity = {
-                    x: (Math.random() - 0.5) * 10,
-                    y: (Math.random() - 0.5) * 10
+                    x: (Math.random() - 0.5) * 8,
+                    y: (Math.random() - 0.5) * 8
                 };
                 this.life = 100;
                 this.opacity = 1;
@@ -228,28 +169,34 @@
             }
 
             update() {
-                this.velocity.y += 0.05; // gravity
+                this.velocity.y += 0.05;
                 this.x += this.velocity.x;
                 this.y += this.velocity.y;
-                this.life -= 1.5;
+                this.life -= 1.2;
                 this.opacity = this.life / 100;
             }
         }
 
-        function createExplosion() {
-            const x = Math.random() * canvas.width;
-            const y = Math.random() * (canvas.height * 0.6);
-            const colors = ['#FFD700', '#FFFFFF', '#FF4500', '#ADFF2F', '#00FFFF'];
-            const color = colors[Math.floor(Math.random() * colors.length)];
-            
-            for (let i = 0; i < 40; i++) {
-                particles.push(new Particle(x, y, color));
+        function explode() {
+            if(document.getElementById('overlay-start').style.display === 'none') {
+                const x = Math.random() * canvas.width;
+                const y = Math.random() * (canvas.height * 0.7);
+                const colors = ['#facc15', '#ffffff', '#fbbf24', '#34d399', '#f472b6', '#60a5fa'];
+                const color = colors[Math.floor(Math.random() * colors.length)];
+                
+                // Play SFX
+                const clonePop = sfxPop.cloneNode();
+                clonePop.volume = 0.2;
+                clonePop.play();
+
+                for (let i = 0; i < 40; i++) {
+                    particles.push(new Particle(x, y, color));
+                }
             }
         }
 
         function animate() {
-            // Efek trail yang halus
-            ctx.fillStyle = 'rgba(5, 29, 22, 0.2)';
+            ctx.fillStyle = 'rgba(2, 21, 17, 0.2)';
             ctx.fillRect(0, 0, canvas.width, canvas.height);
 
             particles.forEach((p, i) => {
@@ -263,10 +210,7 @@
             requestAnimationFrame(animate);
         }
 
-        // Jalankan Semuanya
-        rotateContent();
-        setInterval(rotateContent, 7000);
-        setInterval(createExplosion, 1200); // Kembang api setiap 1.2 detik
+        setInterval(explode, 1500);
         animate();
 
     </script>
