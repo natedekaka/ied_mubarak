@@ -56,9 +56,20 @@
             0%, 100% { transform: translateX(0); }
             50% { transform: translateX(-10px); }
         }
+        
+        /* Sembunyikan Player YouTube */
+        #youtube-player {
+            position: absolute;
+            top: -100px;
+            left: -100px;
+            width: 1px;
+            height: 1px;
+            opacity: 0;
+            pointer-events: none;
+        }
     </style>
 </head>
-<body class="text-white overflow-hidden select-none" onclick="enableAudio()">
+<body class="text-white overflow-hidden select-none" onclick="startEverything()">
 
     <!-- Background Layer -->
     <div class="fixed inset-0 z-0">
@@ -84,45 +95,71 @@
 
     <!-- Main UI -->
     <main class="relative z-20 h-screen w-screen flex flex-col items-center justify-center p-6">
-        
         <div class="glass max-w-lg w-full rounded-[3.5rem] p-12 md:p-16 text-center animate-float shadow-[0_0_50px_rgba(0,0,0,0.5)] border-t border-white/20">
             <div id="accent-glow" class="absolute -top-20 -left-20 w-60 h-60 opacity-10 blur-[100px]" style="background-color: var(--theme-accent);"></div>
-            
             <div class="font-arabic text-2xl md:text-3xl mb-6 tracking-[0.3em] transition-colors duration-500" style="color: var(--theme-accent);">عيد مبارك</div>
-            
             <h1 class="font-script text-6xl md:text-7xl mb-10 transition-colors duration-500 drop-shadow-2xl" style="color: var(--theme-accent);">Idul Fitri 1447 H</h1>
-            
             <div class="h-48 flex items-center justify-center mb-10">
                 <p id="genz-text" class="text-xl md:text-2xl font-light leading-relaxed italic text-white/90 transition-all duration-700">
                     Slay hari raya, vibes suci 🌙
                 </p>
             </div>
-
             <div class="pt-10 border-t border-white/5 relative">
                 <p class="text-[11px] tracking-[0.5em] uppercase opacity-40 font-black mb-3">Vibes Curator</p>
                 <p class="text-2xl font-black tracking-widest uppercase bg-clip-text text-transparent bg-gradient-to-r from-white via-yellow-500 to-white">natedekaka</p>
             </div>
         </div>
-
-        <div class="mt-10 flex items-center gap-4 opacity-30">
-            <div class="h-[1px] w-12 bg-white/20"></div>
-            <span class="text-[10px] uppercase tracking-[0.6em] whitespace-nowrap">Auto Fireworks & Selamat Lebaran Hits</span>
-            <div class="h-[1px] w-12 bg-white/20"></div>
-        </div>
     </main>
 
-    <!-- Audio Stack -->
-    <audio id="bgm" preload="auto"></audio>
+    <!-- YouTube Hidden Player -->
+    <div id="youtube-player"></div>
+    
+    <!-- SFX Kembang Api -->
     <audio id="sfx-pop" preload="auto">
         <source src="https://assets.mixkit.co/active_storage/sfx/2571/2571-preview.mp3" type="audio/mpeg">
     </audio>
 
     <script>
-        // --- Selamat Lebaran Playlist ---
-        const playlist = [
-            "https://raw.githubusercontent.com/Ananda-Zul/music/main/selamat-lebaran.mp3", // Link lagu Selamat Lebaran Viral
-            "https://www.mboxdrive.com/selamatlebaran.mp3"
-        ];
+        // --- YouTube API Logic ---
+        var player;
+        function onYouTubeIframeAPIReady() {
+            player = new YT.Player('youtube-player', {
+                height: '0',
+                width: '0',
+                videoId: 'EoSnWjLnhUE', // ID video dari link Anda
+                playerVars: {
+                    'autoplay': 1,
+                    'loop': 1,
+                    'playlist': 'EoSnWjLnhUE', // Agar looping bekerja
+                    'controls': 0,
+                    'showinfo': 0,
+                    'modestbranding': 1
+                },
+                events: {
+                    'onReady': onPlayerReady
+                }
+            });
+        }
+
+        function onPlayerReady(event) {
+            event.target.mute(); // Mute dulu agar autoplay diizinkan browser
+            event.target.playVideo();
+        }
+
+        function startEverything() {
+            if (player && player.unMute) {
+                player.unMute();
+                player.setVolume(60);
+                document.getElementById('audio-hint').style.display = 'none';
+                audioStarted = true;
+            }
+        }
+
+        // --- Load YouTube SDK ---
+        var tag = document.createElement('script');
+        tag.src = "https://www.youtube.com/iframe_api";
+        var firstScriptTag = document.getElementsByTagName('script')[0];
+        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 
         // --- Theme Logic ---
         function setTheme(primary, accent, bg) {
@@ -145,9 +182,8 @@
 
         let mIdx = 0;
         const textEl = document.getElementById('genz-text');
-        const bgm = document.getElementById('bgm');
         const sfxPop = document.getElementById('sfx-pop');
-        const audioHint = document.getElementById('audio-hint');
+        let audioStarted = false;
 
         function rotateContent() {
             textEl.style.opacity = '0';
@@ -158,24 +194,6 @@
                 textEl.style.transform = 'translateY(0)';
                 mIdx = (mIdx + 1) % messages.length;
             }, 700);
-        }
-
-        // --- Audio Logic ---
-        function playRandomSong() {
-            const song = playlist[Math.floor(Math.random() * playlist.length)];
-            bgm.src = song;
-            bgm.volume = 0.5;
-            bgm.play().catch(() => {});
-            bgm.onended = playRandomSong; 
-        }
-
-        let audioStarted = false;
-        function enableAudio() {
-            if (!audioStarted) {
-                playRandomSong();
-                audioHint.style.display = 'none';
-                audioStarted = true;
-            }
         }
 
         // --- Fireworks System ---
@@ -206,7 +224,7 @@
                 ctx.fill();
             }
             update() {
-                this.velocity.y += 0.1; 
+                this.velocity.y += 0.1;
                 this.x += this.velocity.x;
                 this.y += this.velocity.y;
                 this.life -= 1.8;
@@ -251,7 +269,6 @@
             setInterval(explode, 1200);
             animate();
         };
-
     </script>
 </body>
 </html>
