@@ -26,6 +26,7 @@
             overflow: hidden;
             background-color: var(--primary);
             user-select: none;
+            touch-action: manipulation;
         }
 
         #bg-image {
@@ -37,17 +38,7 @@
             background-size: cover;
             background-position: center;
             transition: opacity 2s ease-in-out;
-            z-index: -3;
-        }
-
-        #fireworks {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
-            pointer-events: none;
+            z-index: -5;
         }
 
         .overlay {
@@ -56,9 +47,19 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: radial-gradient(circle, transparent 10%, var(--primary) 120%);
+            background: radial-gradient(circle, transparent 10%, var(--primary) 150%);
             background-color: var(--bg-overlay);
-            z-index: -2;
+            z-index: -4;
+        }
+
+        #fireworks {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1; /* Di atas overlay, di bawah container */
+            pointer-events: none;
         }
 
         .container {
@@ -75,14 +76,15 @@
         }
 
         .greeting-card {
-            background: rgba(255, 255, 255, 0.05);
+            background: rgba(255, 255, 255, 0.07);
             backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
             padding: 50px 30px;
             border-radius: 30px;
             border: 1px solid rgba(230, 185, 30, 0.4);
             max-width: 650px;
             width: 95%;
-            box-shadow: 0 25px 50px rgba(0,0,0,0.6), inset 0 0 20px rgba(230, 185, 30, 0.1);
+            box-shadow: 0 25px 50px rgba(0,0,0,0.6);
             animation: cardEntrance 1.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
@@ -92,34 +94,31 @@
             color: var(--secondary);
             margin-bottom: 5px;
             letter-spacing: 5px;
-            opacity: 0.8;
             animation: pulse 2s infinite;
         }
 
         h1 {
             font-family: 'Dancing Script', cursive;
-            font-size: 4rem;
+            font-size: 3.5rem;
             color: var(--accent);
             margin-bottom: 20px;
-            text-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
-            animation: float 5s ease-in-out infinite;
+            text-shadow: 0 0 15px rgba(255, 215, 0, 0.4);
         }
 
         .message {
-            font-size: 1.2rem;
+            font-size: 1.15rem;
             line-height: 1.8;
             margin-bottom: 30px;
             min-height: 100px;
             font-style: italic;
-            transition: all 0.8s ease;
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+            transition: opacity 0.8s ease;
         }
 
         .signature {
             font-weight: 600;
             letter-spacing: 4px;
             color: var(--secondary);
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             text-transform: uppercase;
             border-top: 1px solid rgba(230, 185, 30, 0.3);
             display: inline-block;
@@ -128,43 +127,38 @@
 
         /* Animations */
         @keyframes cardEntrance {
-            from { opacity: 0; transform: scale(0.8) translateY(50px); }
+            from { opacity: 0; transform: scale(0.9) translateY(30px); }
             to { opacity: 1; transform: scale(1) translateY(0); }
         }
 
-        @keyframes float {
-            0%, 100% { transform: translateY(0) rotate(-1deg); }
-            50% { transform: translateY(-15px) rotate(1deg); }
-        }
-
         @keyframes pulse {
-            0%, 100% { opacity: 0.5; transform: scale(1); }
+            0%, 100% { opacity: 0.6; transform: scale(1); }
             50% { opacity: 1; transform: scale(1.05); }
-        }
-
-        /* Responsive */
-        @media (max-width: 600px) {
-            h1 { font-size: 2.8rem; }
-            .message { font-size: 1.05rem; }
-            .greeting-card { padding: 40px 20px; }
         }
 
         .hint {
             position: fixed;
             bottom: 30px;
             font-size: 0.8rem;
-            opacity: 0.5;
+            opacity: 0.6;
             color: white;
             animation: fadeInOut 3s infinite;
+            z-index: 20;
         }
 
         @keyframes fadeInOut {
             0%, 100% { opacity: 0.2; }
-            50% { opacity: 0.7; }
+            50% { opacity: 0.8; }
+        }
+
+        @media (max-width: 600px) {
+            h1 { font-size: 2.5rem; }
+            .message { font-size: 1rem; }
+            .greeting-card { padding: 40px 20px; }
         }
     </style>
 </head>
-<body onclick="createManualFirework(event)">
+<body onmousedown="handleInteraction(event)" ontouchstart="handleInteraction(event)">
 
     <div id="bg-image"></div>
     <div class="overlay"></div>
@@ -183,7 +177,7 @@
     </div>
 
     <script>
-        // --- CONTENT LOGIC ---
+        // --- CONTENT ---
         const messages = [
             "Lisan seringkali tajam, hati pun kadang berdebu. Di hari yang suci ini, izinkan aku memohon maaf atas segala khilafku.",
             "Semesta bertasbih menyambut kemenangan. Mari bersihkan jiwa, eratkan ukhuwah, dan tebar cinta kasih di hari yang fitri.",
@@ -208,21 +202,16 @@
             const bgElement = document.getElementById('bg-image');
 
             textElement.style.opacity = 0;
-            textElement.style.transform = "translateY(10px)";
-
             setTimeout(() => {
                 textElement.innerText = messages[msgIndex];
                 bgElement.style.backgroundImage = `url('${images[imgIndex]}')`;
-                
                 textElement.style.opacity = 1;
-                textElement.style.transform = "translateY(0)";
-
                 msgIndex = (msgIndex + 1) % messages.length;
                 imgIndex = (imgIndex + 1) % images.length;
             }, 800);
         }
 
-        // --- FIREWORKS LOGIC ---
+        // --- FIREWORKS ---
         const canvas = document.getElementById('fireworks');
         const ctx = canvas.getContext('2d');
         let particles = [];
@@ -231,7 +220,6 @@
             canvas.width = window.innerWidth;
             canvas.height = window.innerHeight;
         }
-
         window.addEventListener('resize', resizeCanvas);
         resizeCanvas();
 
@@ -241,18 +229,19 @@
                 this.y = y;
                 this.color = color;
                 this.velocity = {
-                    x: (Math.random() - 0.5) * 8,
-                    y: (Math.random() - 0.5) * 8
+                    x: (Math.random() - 0.5) * 12,
+                    y: (Math.random() - 0.5) * 12
                 };
                 this.alpha = 1;
-                this.friction = 0.95;
+                this.friction = 0.96;
+                this.gravity = 0.15;
             }
 
             draw() {
                 ctx.save();
                 ctx.globalAlpha = this.alpha;
                 ctx.beginPath();
-                ctx.arc(this.x, this.y, 2, 0, Math.PI * 2, false);
+                ctx.arc(this.x, this.y, 2.5, 0, Math.PI * 2, false);
                 ctx.fillStyle = this.color;
                 ctx.fill();
                 ctx.restore();
@@ -261,25 +250,40 @@
             update() {
                 this.velocity.x *= this.friction;
                 this.velocity.y *= this.friction;
-                this.velocity.y += 0.05; // Gravity
+                this.velocity.y += this.gravity;
                 this.x += this.velocity.x;
                 this.y += this.velocity.y;
-                this.alpha -= 0.01;
+                this.alpha -= 0.012;
             }
         }
 
         function createFirework(x, y) {
-            const colors = ['#ffd700', '#ffffff', '#e6b91e', '#ff4d4d', '#00ffcc'];
+            const colors = ['#ffd700', '#ffffff', '#e6b91e', '#ff4d4d', '#00ffcc', '#ff00ff'];
             const color = colors[Math.floor(Math.random() * colors.length)];
-            for (let i = 0; i < 40; i++) {
+            for (let i = 0; i < 30; i++) {
                 particles.push(new Particle(x, y, color));
             }
         }
 
+        function handleInteraction(e) {
+            let x, y;
+            if (e.touches) {
+                x = e.touches[0].clientX;
+                y = e.touches[0].clientY;
+            } else {
+                x = e.clientX;
+                y = e.clientY;
+            }
+            createFirework(x, y);
+        }
+
         function animate() {
             requestAnimationFrame(animate);
-            ctx.fillStyle = 'rgba(10, 46, 36, 0.1)';
+            // Clear canvas with transparency for trails
+            ctx.globalCompositeOperation = 'destination-out';
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.2)';
             ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.globalCompositeOperation = 'source-over';
 
             particles.forEach((particle, index) => {
                 if (particle.alpha > 0) {
@@ -291,22 +295,14 @@
             });
         }
 
-        function createManualFirework(e) {
-            createFirework(e.clientX || e.touches[0].clientX, e.clientY || e.touches[0].clientY);
-        }
-
         // Auto fireworks
         setInterval(() => {
-            const x = Math.random() * canvas.width;
-            const y = Math.random() * (canvas.height * 0.5);
-            createFirework(x, y);
-        }, 2000);
+            createFirework(Math.random() * canvas.width, Math.random() * (canvas.height * 0.4));
+        }, 1500);
 
-        // --- INITIALIZE ---
         updateContent();
         setInterval(updateContent, 8000);
         animate();
-
     </script>
 </body>
 </html>
