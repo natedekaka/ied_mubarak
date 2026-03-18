@@ -7,11 +7,11 @@
     <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Poppins:wght@300;400;600&family=Reem+Kufi:wght@700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary: #0a2e24;
-            --secondary: #e6b91e;
+            --primary: #051d16;
+            --secondary: #d4af37;
             --accent: #ffd700;
             --text-light: #ffffff;
-            --bg-overlay: rgba(0, 0, 0, 0.6);
+            --bg-overlay: rgba(0, 0, 0, 0.7);
         }
 
         * {
@@ -22,13 +22,13 @@
 
         body, html {
             height: 100%;
+            width: 100%;
             font-family: 'Poppins', sans-serif;
             overflow: hidden;
             background-color: var(--primary);
-            user-select: none;
-            touch-action: manipulation;
         }
 
+        /* Layering System */
         #bg-image {
             position: fixed;
             top: 0;
@@ -37,8 +37,8 @@
             height: 100%;
             background-size: cover;
             background-position: center;
-            transition: opacity 2s ease-in-out;
-            z-index: -5;
+            z-index: 1;
+            transition: opacity 1.5s ease;
         }
 
         .overlay {
@@ -47,262 +47,228 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: radial-gradient(circle, transparent 10%, var(--primary) 150%);
+            background: radial-gradient(circle, transparent 20%, var(--primary) 100%);
             background-color: var(--bg-overlay);
-            z-index: -4;
+            z-index: 2;
         }
 
-        #fireworks {
+        #fireworks-canvas {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            z-index: -1; /* Di atas overlay, di bawah container */
+            z-index: 3; /* Pastikan di atas overlay & background */
             pointer-events: none;
         }
 
-        .container {
+        .main-content {
+            position: relative;
             height: 100%;
+            width: 100%;
             display: flex;
-            flex-direction: column;
             justify-content: center;
             align-items: center;
-            text-align: center;
+            z-index: 10; /* Di atas segalanya */
             padding: 20px;
-            color: var(--text-light);
-            position: relative;
-            z-index: 10;
         }
 
-        .greeting-card {
-            background: rgba(255, 255, 255, 0.07);
-            backdrop-filter: blur(15px);
-            -webkit-backdrop-filter: blur(15px);
-            padding: 50px 30px;
-            border-radius: 30px;
-            border: 1px solid rgba(230, 185, 30, 0.4);
-            max-width: 650px;
-            width: 95%;
-            box-shadow: 0 25px 50px rgba(0,0,0,0.6);
-            animation: cardEntrance 1.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        .card {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            border-radius: 25px;
+            padding: 40px 25px;
+            max-width: 500px;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+            animation: fadeInScale 1.2s ease-out;
         }
 
         .calligraphy {
             font-family: 'Reem Kufi', sans-serif;
-            font-size: 1.5rem;
+            font-size: 1.4rem;
             color: var(--secondary);
-            margin-bottom: 5px;
-            letter-spacing: 5px;
-            animation: pulse 2s infinite;
+            margin-bottom: 10px;
+            letter-spacing: 4px;
         }
 
         h1 {
             font-family: 'Dancing Script', cursive;
-            font-size: 3.5rem;
+            font-size: 3rem;
             color: var(--accent);
             margin-bottom: 20px;
-            text-shadow: 0 0 15px rgba(255, 215, 0, 0.4);
+            line-height: 1.2;
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+        }
+
+        .message-container {
+            min-height: 120px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .message {
-            font-size: 1.15rem;
-            line-height: 1.8;
-            margin-bottom: 30px;
-            min-height: 100px;
+            font-size: 1.05rem;
+            line-height: 1.7;
             font-style: italic;
-            transition: opacity 0.8s ease;
+            color: #e0e0e0;
+            transition: opacity 0.6s ease;
         }
 
         .signature {
+            margin-top: 25px;
+            padding-top: 15px;
+            border-top: 1px solid rgba(212, 175, 55, 0.2);
             font-weight: 600;
-            letter-spacing: 4px;
+            letter-spacing: 3px;
             color: var(--secondary);
             font-size: 0.85rem;
             text-transform: uppercase;
-            border-top: 1px solid rgba(230, 185, 30, 0.3);
-            display: inline-block;
-            padding-top: 15px;
         }
 
         /* Animations */
-        @keyframes cardEntrance {
-            from { opacity: 0; transform: scale(0.9) translateY(30px); }
-            to { opacity: 1; transform: scale(1) translateY(0); }
+        @keyframes fadeInScale {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
         }
 
-        @keyframes pulse {
-            0%, 100% { opacity: 0.6; transform: scale(1); }
-            50% { opacity: 1; transform: scale(1.05); }
-        }
-
-        .hint {
-            position: fixed;
-            bottom: 30px;
-            font-size: 0.8rem;
-            opacity: 0.6;
-            color: white;
-            animation: fadeInOut 3s infinite;
-            z-index: 20;
-        }
-
-        @keyframes fadeInOut {
-            0%, 100% { opacity: 0.2; }
-            50% { opacity: 0.8; }
-        }
-
-        @media (max-width: 600px) {
-            h1 { font-size: 2.5rem; }
-            .message { font-size: 1rem; }
-            .greeting-card { padding: 40px 20px; }
+        /* Responsive Mobile Fixes */
+        @media (max-width: 400px) {
+            h1 { font-size: 2.3rem; }
+            .card { padding: 30px 20px; }
+            .message { font-size: 0.95rem; }
         }
     </style>
 </head>
-<body onmousedown="handleInteraction(event)" ontouchstart="handleInteraction(event)">
+<body>
 
     <div id="bg-image"></div>
     <div class="overlay"></div>
-    <canvas id="fireworks"></canvas>
+    <canvas id="fireworks-canvas"></canvas>
 
-    <div class="container">
-        <div class="greeting-card">
+    <div class="main-content">
+        <div class="card">
             <div class="calligraphy">عيد مبارك</div>
-            <h1>Idul Fitri 1445 H</h1>
-            <div class="message" id="dynamic-text">
-                Menghimpun doa dan keberkahan...
+            <h1>Idul Fitri 1447 H</h1>
+            <div class="message-container">
+                <div class="message" id="text-display">Menyambut hari yang fitri...</div>
             </div>
             <div class="signature">natedekaka</div>
         </div>
-        <div class="hint">Sentuh layar untuk kembang api ✨</div>
     </div>
 
     <script>
-        // --- CONTENT ---
+        // --- Content Data ---
         const messages = [
-            "Lisan seringkali tajam, hati pun kadang berdebu. Di hari yang suci ini, izinkan aku memohon maaf atas segala khilafku.",
-            "Semesta bertasbih menyambut kemenangan. Mari bersihkan jiwa, eratkan ukhuwah, dan tebar cinta kasih di hari yang fitri.",
-            "Bukan tentang kembali menjadi baru, tapi tentang kembali menjadi suci. Selamat Lebaran, semoga keberkahan menyertaimu.",
-            "Maaf tak bisa menghapus masa lalu, tapi ia mampu memperindah masa depan. Selamat Idul Fitri, mohon maaf lahir dan batin.",
-            "Gema Takbir telah berkumandang, tanda kemenangan telah datang. Selamat merayakan hari kemenangan bersama keluarga tercinta.",
-            "Kesalahan adalah manusiawi, memaafkan adalah ukhuwi. Mari kita rajut kembali tali persaudaraan dengan hati yang damai."
+            "Sebening embun pagi, seputih kapas yang suci. Mari kita rajut kembali ukhuwah dengan maaf yang tulus.",
+            "Hati yang jernih adalah sebaik-baiknya tempat berteduh. Maafkan jika lisan pernah melukai, maafkan jika langkah pernah salah.",
+            "Di hari yang suci ini, biarkan kasih sayang mengalir deras seperti air, menyejukkan jiwa dan mendamaikan semesta.",
+            "Bukan baju baru yang utama, tapi hati yang diperbarui dengan ampunan-Nya. Selamat Idul Fitri 1447 H.",
+            "Gema takbir memanggil kita kembali ke fitrah. Selamat Lebaran, mohon maaf lahir dan batin untukmu sekeluarga."
         ];
 
         const images = [
-            "https://images.unsplash.com/photo-1598048145816-43516339480d?auto=format&fit=crop&q=80&w=1600",
-            "https://images.unsplash.com/photo-1518005020250-675f0f0fd13b?auto=format&fit=crop&q=80&w=1600",
-            "https://images.unsplash.com/photo-1564149504294-81c62f927711?auto=format&fit=crop&q=80&w=1600",
-            "https://images.unsplash.com/photo-1542332213-31f87348057f?auto=format&fit=crop&q=80&w=1600"
+            "https://images.unsplash.com/photo-1598048145816-43516339480d?auto=format&fit=crop&q=80&w=1200",
+            "https://images.unsplash.com/photo-1518005020250-675f0f0fd13b?auto=format&fit=crop&q=80&w=1200",
+            "https://images.unsplash.com/photo-1542332213-31f87348057f?auto=format&fit=crop&q=80&w=1200"
         ];
 
-        let msgIndex = 0;
-        let imgIndex = 0;
+        let mIdx = 0, iIdx = 0;
 
-        function updateContent() {
-            const textElement = document.getElementById('dynamic-text');
-            const bgElement = document.getElementById('bg-image');
-
-            textElement.style.opacity = 0;
+        function rotateContent() {
+            const txt = document.getElementById('text-display');
+            const bg = document.getElementById('bg-image');
+            
+            txt.style.opacity = 0;
             setTimeout(() => {
-                textElement.innerText = messages[msgIndex];
-                bgElement.style.backgroundImage = `url('${images[imgIndex]}')`;
-                textElement.style.opacity = 1;
-                msgIndex = (msgIndex + 1) % messages.length;
-                imgIndex = (imgIndex + 1) % images.length;
-            }, 800);
+                txt.innerText = messages[mIdx];
+                bg.style.backgroundImage = `url('${images[iIdx]}')`;
+                txt.style.opacity = 1;
+                mIdx = (mIdx + 1) % messages.length;
+                iIdx = (iIdx + 1) % images.length;
+            }, 600);
         }
 
-        // --- FIREWORKS ---
-        const canvas = document.getElementById('fireworks');
+        // --- Automatic Fireworks Logic ---
+        const canvas = document.getElementById('fireworks-canvas');
         const ctx = canvas.getContext('2d');
         let particles = [];
 
-        function resizeCanvas() {
+        function initCanvas() {
             canvas.width = window.innerWidth;
             canvas.height = window.innerHeight;
         }
-        window.addEventListener('resize', resizeCanvas);
-        resizeCanvas();
+        window.addEventListener('resize', initCanvas);
+        initCanvas();
 
         class Particle {
             constructor(x, y, color) {
                 this.x = x;
                 this.y = y;
                 this.color = color;
+                this.radius = Math.random() * 2 + 1;
                 this.velocity = {
-                    x: (Math.random() - 0.5) * 12,
-                    y: (Math.random() - 0.5) * 12
+                    x: (Math.random() - 0.5) * 10,
+                    y: (Math.random() - 0.5) * 10
                 };
-                this.alpha = 1;
-                this.friction = 0.96;
-                this.gravity = 0.15;
+                this.life = 100;
+                this.opacity = 1;
             }
 
             draw() {
-                ctx.save();
-                ctx.globalAlpha = this.alpha;
                 ctx.beginPath();
-                ctx.arc(this.x, this.y, 2.5, 0, Math.PI * 2, false);
+                ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
                 ctx.fillStyle = this.color;
+                ctx.globalAlpha = this.opacity;
                 ctx.fill();
-                ctx.restore();
             }
 
             update() {
-                this.velocity.x *= this.friction;
-                this.velocity.y *= this.friction;
-                this.velocity.y += this.gravity;
+                this.velocity.y += 0.05; // gravity
                 this.x += this.velocity.x;
                 this.y += this.velocity.y;
-                this.alpha -= 0.012;
+                this.life -= 1.5;
+                this.opacity = this.life / 100;
             }
         }
 
-        function createFirework(x, y) {
-            const colors = ['#ffd700', '#ffffff', '#e6b91e', '#ff4d4d', '#00ffcc', '#ff00ff'];
+        function createExplosion() {
+            const x = Math.random() * canvas.width;
+            const y = Math.random() * (canvas.height * 0.6);
+            const colors = ['#FFD700', '#FFFFFF', '#FF4500', '#ADFF2F', '#00FFFF'];
             const color = colors[Math.floor(Math.random() * colors.length)];
-            for (let i = 0; i < 30; i++) {
+            
+            for (let i = 0; i < 40; i++) {
                 particles.push(new Particle(x, y, color));
             }
         }
 
-        function handleInteraction(e) {
-            let x, y;
-            if (e.touches) {
-                x = e.touches[0].clientX;
-                y = e.touches[0].clientY;
-            } else {
-                x = e.clientX;
-                y = e.clientY;
-            }
-            createFirework(x, y);
-        }
-
         function animate() {
-            requestAnimationFrame(animate);
-            // Clear canvas with transparency for trails
-            ctx.globalCompositeOperation = 'destination-out';
-            ctx.fillStyle = 'rgba(0, 0, 0, 0.2)';
+            // Efek trail yang halus
+            ctx.fillStyle = 'rgba(5, 29, 22, 0.2)';
             ctx.fillRect(0, 0, canvas.width, canvas.height);
-            ctx.globalCompositeOperation = 'source-over';
 
-            particles.forEach((particle, index) => {
-                if (particle.alpha > 0) {
-                    particle.update();
-                    particle.draw();
+            particles.forEach((p, i) => {
+                if (p.life > 0) {
+                    p.update();
+                    p.draw();
                 } else {
-                    particles.splice(index, 1);
+                    particles.splice(i, 1);
                 }
             });
+            requestAnimationFrame(animate);
         }
 
-        // Auto fireworks
-        setInterval(() => {
-            createFirework(Math.random() * canvas.width, Math.random() * (canvas.height * 0.4));
-        }, 1500);
-
-        updateContent();
-        setInterval(updateContent, 8000);
+        // Jalankan Semuanya
+        rotateContent();
+        setInterval(rotateContent, 7000);
+        setInterval(createExplosion, 1200); // Kembang api setiap 1.2 detik
         animate();
+
     </script>
 </body>
 </html>
