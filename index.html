@@ -79,14 +79,13 @@
     <!-- Mute Hint -->
     <div id="audio-hint" class="fixed bottom-10 left-10 z-50 flex items-center gap-3 glass px-5 py-3 rounded-full mute-hint border border-yellow-500/30">
         <span class="text-xl">🔊</span>
-        <span class="text-sm font-bold text-yellow-500 uppercase tracking-tighter">Sentuh layar untuk suara</span>
+        <span class="text-sm font-bold text-yellow-500 uppercase tracking-tighter">Sentuh layar untuk Lagu Lebaran</span>
     </div>
 
     <!-- Main UI -->
     <main class="relative z-20 h-screen w-screen flex flex-col items-center justify-center p-6">
         
         <div class="glass max-w-lg w-full rounded-[3.5rem] p-12 md:p-16 text-center animate-float shadow-[0_0_50px_rgba(0,0,0,0.5)] border-t border-white/20">
-            <!-- Decorative Accent -->
             <div id="accent-glow" class="absolute -top-20 -left-20 w-60 h-60 opacity-10 blur-[100px]" style="background-color: var(--theme-accent);"></div>
             
             <div class="font-arabic text-2xl md:text-3xl mb-6 tracking-[0.3em] transition-colors duration-500" style="color: var(--theme-accent);">عيد مبارك</div>
@@ -95,7 +94,7 @@
             
             <div class="h-48 flex items-center justify-center mb-10">
                 <p id="genz-text" class="text-xl md:text-2xl font-light leading-relaxed italic text-white/90 transition-all duration-700">
-                    Mencari sinyal berkah...
+                    Slay hari raya, vibes suci 🌙
                 </p>
             </div>
 
@@ -107,7 +106,7 @@
 
         <div class="mt-10 flex items-center gap-4 opacity-30">
             <div class="h-[1px] w-12 bg-white/20"></div>
-            <span class="text-[10px] uppercase tracking-[0.6em] whitespace-nowrap">Auto Fireworks & Viral Hits</span>
+            <span class="text-[10px] uppercase tracking-[0.6em] whitespace-nowrap">Auto Fireworks & Selamat Lebaran Hits</span>
             <div class="h-[1px] w-12 bg-white/20"></div>
         </div>
     </main>
@@ -119,11 +118,10 @@
     </audio>
 
     <script>
-        // --- Viral Songs List ---
+        // --- Selamat Lebaran Playlist ---
         const playlist = [
-            "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3", // Ganti dengan URL lagu lebaran viral
-            "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3",
-            "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3"
+            "https://raw.githubusercontent.com/Ananda-Zul/music/main/selamat-lebaran.mp3", // Link lagu Selamat Lebaran Viral
+            "https://www.mboxdrive.com/selamatlebaran.mp3"
         ];
 
         // --- Theme Logic ---
@@ -166,11 +164,9 @@
         function playRandomSong() {
             const song = playlist[Math.floor(Math.random() * playlist.length)];
             bgm.src = song;
-            bgm.volume = 0.4;
-            bgm.play().catch(() => {
-                console.log("Waiting for user interaction for audio...");
-            });
-            bgm.onended = playRandomSong; // Auto next song
+            bgm.volume = 0.5;
+            bgm.play().catch(() => {});
+            bgm.onended = playRandomSong; 
         }
 
         let audioStarted = false;
@@ -210,7 +206,7 @@
                 ctx.fill();
             }
             update() {
-                this.velocity.y += 0.1; // gravity
+                this.velocity.y += 0.1; 
                 this.x += this.velocity.x;
                 this.y += this.velocity.y;
                 this.life -= 1.8;
@@ -225,7 +221,6 @@
             const colors = [accent, '#FFFFFF', '#FFD700', '#FF4D4D', '#00FFFF'];
             const color = colors[Math.floor(Math.random() * colors.length)];
             
-            // SFX
             if (audioStarted) {
                 const clonePop = sfxPop.cloneNode();
                 clonePop.volume = 0.1;
@@ -250,14 +245,11 @@
             requestAnimationFrame(animate);
         }
 
-        // Initialize
         window.onload = () => {
             setInterval(rotateContent, 7500);
             rotateContent();
             setInterval(explode, 1200);
             animate();
-            // Try autoplay
-            playRandomSong();
         };
 
     </script>
