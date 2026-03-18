@@ -86,10 +86,12 @@
         <div class="theme-btn bg-rose-800" onclick="setTheme('#9f1239', '#fda4af', '#1a0505')"></div>
     </div>
 
-    <!-- Mute Hint -->
-    <div id="audio-hint" class="fixed bottom-10 left-1/2 -translate-x-1/2 z-50 flex items-center gap-3 glass px-6 py-3 rounded-full mute-hint border border-yellow-500/30 whitespace-nowrap">
-        <span class="text-xl">🔊</span>
-        <span class="text-xs font-bold text-yellow-500 uppercase tracking-widest">Sentuh layar untuk Lagu Lebaran</span>
+    <!-- Mute Hint (Fully Centered) -->
+    <div id="audio-hint" class="fixed bottom-12 left-0 right-0 z-50 flex justify-center pointer-events-none">
+        <div class="glass px-6 py-3 rounded-full mute-hint border border-yellow-500/30 flex items-center gap-3 shadow-2xl">
+            <span class="text-xl">🔊</span>
+            <span class="text-[10px] md:text-xs font-bold text-yellow-500 uppercase tracking-[0.2em] whitespace-nowrap">Sentuh layar untuk Lagu Lebaran</span>
+        </div>
     </div>
 
     <!-- Main UI -->
@@ -104,7 +106,7 @@
                 </p>
             </div>
             <div class="pt-8 border-t border-white/5 relative">
-                <p class="text-[10px] tracking-[0.5em] uppercase opacity-40 font-black mb-2">Vibes Curator</p>
+                <p class="text-2xl mb-3">🌙🙏</p>
                 <p class="text-xl font-black tracking-widest uppercase bg-clip-text text-transparent bg-gradient-to-r from-white via-yellow-500 to-white">natedekaka</p>
             </div>
         </div>
