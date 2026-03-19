@@ -273,35 +273,97 @@
     <audio id="pop" preload="auto"><source src="https://assets.mixkit.co/active_storage/sfx/2571/2571-preview.mp3" type="audio/mpeg"></audio>
 
     <script>
-        var player, audioStarted = false;
+        // Web Audio API - Procedural Music
+        let audioContext, audioStarted = false;
         
-        function onYouTubeIframeAPIReady() {
-            try {
-                player = new YT.Player('youtube', {
-                    height: 0, width: 0, videoId: 'EoSnWjLnhUE',
-                    playerVars: { autoplay: 1, loop: 1, playlist: 'EoSnWjLnhUE', controls: 0, modestbranding: 1, origin: window.location.origin },
-                    events: { onReady: (e) => { e.target.mute(); e.target.playVideo(); } }
-                });
-            } catch (e) { console.warn(e); }
+        function initAudio() {
+            if (!audioContext) {
+                audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            }
+            return audioContext;
+        }
+        
+        function playNote(frequency, duration, time = audioContext.currentTime) {
+            const osc = audioContext.createOscillator();
+            const gain = audioContext.createGain();
+            
+            osc.connect(gain);
+            gain.connect(audioContext.destination);
+            
+            osc.frequency.value = frequency;
+            osc.type = 'sine';
+            
+            // ADSR Envelope - untuk suara yang natural
+            const attack = 0.05, decay = 0.1, sustain = 0.7, release = 0.1;
+            gain.gain.setValueAtTime(0, time);
+            gain.gain.linearRampToValueAtTime(0.3, time + attack);
+            gain.gain.linearRampToValueAtTime(sustain * 0.2, time + attack + decay);
+            gain.gain.setValueAtTime(sustain * 0.2, time + duration - release);
+            gain.gain.linearRampToValueAtTime(0, time + duration);
+            
+            osc.start(time);
+            osc.stop(time + duration);
+            
+            return { osc, gain };
+        }
+        
+        function playMelody() {
+            const ctx = audioContext;
+            const now = ctx.currentTime;
+            const tempo = 0.4; // Slower untuk greeting card
+            
+            // Melody indah terinspirasi dari lagu Eid tradisional
+            // Menggunakan pentatonic scale untuk harmoni yang menyenangkan
+            const notes = [
+                // Opening - gentle intro
+                { freq: 523.25, dur: tempo * 2 },    // C5
+                { freq: 587.33, dur: tempo * 1.5 },  // D5
+                { freq: 659.25, dur: tempo * 2 },    // E5
+                { freq: 587.33, dur: tempo * 1 },    // D5
+                
+                // Main phrase
+                { freq: 523.25, dur: tempo * 2 },    // C5
+                { freq: 659.25, dur: tempo * 2 },    // E5
+                { freq: 784.00, dur: tempo * 2 },    // G5
+                { freq: 880.00, dur: tempo * 2 },    // A5
+                
+                // Second phrase - lebih tinggi
+                { freq: 987.77, dur: tempo * 1.5 },  // B5
+                { freq: 880.00, dur: tempo * 1.5 },  // A5
+                { freq: 784.00, dur: tempo * 2 },    // G5
+                { freq: 659.25, dur: tempo * 2 },    // E5
+                
+                // Resolution
+                { freq: 587.33, dur: tempo * 2 },    // D5
+                { freq: 523.25, dur: tempo * 3 },    // C5
+                { freq: 392.00, dur: tempo * 2 },    // G4
+                { freq: 329.63, dur: tempo * 4 },    // E4
+            ];
+            
+            let time = now;
+            notes.forEach(note => {
+                playNote(note.freq, note.dur, time);
+                time += note.dur;
+            });
+            
+            // Loop every 20 seconds
+            setTimeout(playMelody, 20000);
         }
         
         function startEverything() {
             // Hide hint only
             document.getElementById('hint').classList.add('hidden');
             
-            // Unmute and play
-            if (player && typeof player.unMute === 'function') {
-                try {
-                    player.unMute();
-                    player.setVolume(60);
-                    audioStarted = true;
-                } catch (e) { console.warn(e); }
+            // Start Web Audio music
+            if (!audioStarted) {
+                initAudio();
+                if (audioContext.state === 'suspended') {
+                    audioContext.resume();
+                }
+                playMelody();
+                audioStarted = true;
             }
         }
-        
-        var tag = document.createElement('script');
-        tag.src = "https://www.youtube.com/iframe_api";
-        document.getElementsByTagName('script')[0].parentNode.insertBefore(tag, document.getElementsByTagName('script')[0]);
 
         function switchTheme(p, a, b) {
             document.documentElement.style.setProperty('--theme-primary', p);
