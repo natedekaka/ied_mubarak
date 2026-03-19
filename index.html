@@ -61,22 +61,42 @@
         // --- YouTube API Logic ---
         var player;
         function onYouTubeIframeAPIReady() {
-            player = new YT.Player('youtube-player', {
-                height: '0', width: '0', videoId: 'EoSnWjLnhUE',
-                playerVars: { 'autoplay': 1, 'loop': 1, 'playlist': 'EoSnWjLnhUE', 'controls': 0, 'showinfo': 0, 'modestbranding': 1 },
-                events: { 'onReady': onPlayerReady }
-            });
-        }
-        function onPlayerReady(event) { event.target.mute(); event.target.playVideo(); }
-        function startEverything() {
-            if (player && player.unMute) {
-                player.unMute();
-                player.setVolume(60);
-                document.getElementById('audio-hint').style.display = 'none';
-                audioStarted = true;
+            try {
+                player = new YT.Player('youtube-player', {
+                    height: '0', width: '0', videoId: 'EoSnWjLnhUE',
+                    playerVars: { 'autoplay': 1, 'loop': 1, 'playlist': 'EoSnWjLnhUE', 'controls': 0, 'showinfo': 0, 'modestbranding': 1, 'origin': window.location.origin },
+                    events: { 'onReady': onPlayerReady, 'onError': onPlayerError }
+                });
+            } catch (e) {
+                console.warn('YouTube API load error:', e);
             }
         }
-        var tag = document.createElement('script'); tag.src = "https://www.youtube.com/iframe_api";
+        function onPlayerReady(event) { 
+            try {
+                event.target.mute(); 
+                event.target.playVideo(); 
+            } catch (e) {
+                console.warn('Player ready error:', e);
+            }
+        }
+        function onPlayerError(error) {
+            console.warn('YouTube player error:', error.data);
+        }
+        function startEverything() {
+            if (player && typeof player.unMute === 'function') {
+                try {
+                    player.unMute();
+                    player.setVolume(60);
+                    document.getElementById('audio-hint').style.display = 'none';
+                    audioStarted = true;
+                } catch (e) {
+                    console.warn('Audio start error:', e);
+                }
+            }
+        }
+        var tag = document.createElement('script'); 
+        tag.src = "https://www.youtube.com/iframe_api";
+        tag.onerror = () => console.warn('YouTube iframe_api load failed');
         var firstScriptTag = document.getElementsByTagName('script')[0];
         firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 
