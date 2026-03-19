@@ -109,46 +109,72 @@
         </div>
     </div>
 
-    <div class="themes">
+    <div class="themes" id="theme-menu">
         <button class="theme-btn" style="background: #10b981;" onclick="switchTheme('#064e3b', '#facc15', '#021511')"></button>
         <button class="theme-btn" style="background: #a855f7;" onclick="switchTheme('#4c1d95', '#fbbf24', '#0f0720')"></button>
         <button class="theme-btn" style="background: #3b82f6;" onclick="switchTheme('#1e3a8a', '#60a5fa', '#050b1a')"></button>
         <button class="theme-btn" style="background: #f43f5e;" onclick="switchTheme('#9f1239', '#fda4af', '#1a0505')"></button>
+        <button class="theme-btn" style="background: #444; color: white; display: flex; align-items: center; justify-content: center; font-size: 10px;" onclick="document.getElementById('theme-menu').style.display='none'" title="Hide for Recording">✕</button>
     </div>
 
-    <audio id="main-audio" loop preload="auto">
-        <source src="https://raw.githubusercontent.com/Nasheeds/collection/master/Beats%20of%20Happiness%20-%20Eid%20Nasheed.mp3" type="audio/mpeg">
-    </audio>
+    <div id="youtube-player"></div>
     <audio id="pop" preload="auto">
         <source src="https://assets.mixkit.co/active_storage/sfx/2571/2571-preview.mp3" type="audio/mpeg">
     </audio>
 
     <script>
         var audioStarted = false;
-        const mainAudio = document.getElementById('main-audio');
+        var youtubePlayer;
         const tapOverlay = document.getElementById('tap-overlay');
         const tapStatus = document.getElementById('tap-status');
         
-        function handleUserInteraction() {
-            if (audioStarted) return;
-            
-            tapStatus.textContent = "MEMULAI MUSIK...";
-            mainAudio.volume = 0.6;
-            
-            mainAudio.play().then(() => {
-                audioStarted = true;
-                tapOverlay.style.opacity = '0';
-                setTimeout(() => tapOverlay.style.visibility = 'hidden', 500);
-            }).catch(e => {
-                console.error("Playback failed:", e);
-                tapStatus.textContent = "GAGAL MEMUTAR. COBA LAGI.";
+        // Load YouTube IFrame API
+        var tag = document.createElement('script');
+        tag.src = "https://www.youtube.com/iframe_api";
+        var firstScriptTag = document.getElementsByTagName('script')[0];
+        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+        function onYouTubeIframeAPIReady() {
+            youtubePlayer = new YT.Player('youtube-player', {
+                height: '0',
+                width: '0',
+                videoId: 'LB1sAxNI4dY',
+                playerVars: {
+                    'autoplay': 0,
+                    'controls': 0,
+                    'disablekb': 1,
+                    'loop': 1,
+                    'playlist': 'LB1sAxNI4dY'
+                },
+                events: {
+                    'onReady': () => {
+                        console.log("YouTube Player Ready");
+                    },
+                    'onError': (e) => {
+                        console.error("YouTube Player Error:", e);
+                        tapStatus.textContent = "ERROR: MUSIK TIDAK DAPAT DIMUAT.";
+                        tapStatus.style.color = "#ff4444";
+                    }
+                }
             });
         }
 
-        mainAudio.onerror = () => {
-            tapStatus.textContent = "ERROR: MUSIK TIDAK DAPAT DIMUAT.";
-            tapStatus.style.color = "#ff4444";
-        };
+        function handleUserInteraction() {
+            if (audioStarted || !youtubePlayer) return;
+            
+            tapStatus.textContent = "MEMULAI MUSIK...";
+            
+            try {
+                youtubePlayer.setVolume(60);
+                youtubePlayer.playVideo();
+                audioStarted = true;
+                tapOverlay.style.opacity = '0';
+                setTimeout(() => tapOverlay.style.visibility = 'hidden', 500);
+            } catch (e) {
+                console.error("Playback failed:", e);
+                tapStatus.textContent = "GAGAL MEMUTAR. COBA LAGI.";
+            }
+        }
 
         window.onload = () => {
             setInterval(updateMessage, 6000);
