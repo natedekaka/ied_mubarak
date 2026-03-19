@@ -176,61 +176,10 @@
             transform: scale(0.95);
         }
         
-        /* Hint - Hidden After Click */
-        .hint { 
-            position: fixed; 
-            top: 50%; 
-            left: 50%; 
-            transform: translate(-50%, -50%); 
-            z-index: 30; 
-            cursor: pointer;
-            background: rgba(255,255,255,0.05); 
-            backdrop-filter: blur(20px); 
-            padding: 28px 36px; 
-            border-radius: 20px; 
-            border: 1px solid rgba(255,200,100,0.3); 
-            text-align: center; 
-            animation: bounce 2s infinite; 
-        }
-        
-        .hint.hidden {
-            display: none;
-        }
-        
-        @media (min-width: 1024px) {
-            .hint {
-                padding: 40px 50px;
-                border-radius: 30px;
-            }
-        }
-        
-        .hint-emoji { 
-            font-size: 36px; 
-            margin-bottom: 10px; 
-        }
-        
-        @media (min-width: 1024px) {
-            .hint-emoji { font-size: 48px; margin-bottom: 15px; }
-        }
-        
-        .hint-text { 
-            font-size: 13px; 
-            letter-spacing: 1px; 
-            color: #fbbf24; 
-        }
-        
-        @media (min-width: 1024px) {
-            .hint-text { font-size: 16px; letter-spacing: 1.5px; }
-        }
-        
         /* Animations */
         @keyframes float { 
             0%, 100% { transform: translateY(0); } 
             50% { transform: translateY(-8px); } 
-        }
-        @keyframes bounce { 
-            0%, 100% { transform: translate(-50%, -50%); } 
-            50% { transform: translate(-50%, -55%); } 
         }
         
         /* Message animations - Stay inside card */
@@ -290,12 +239,6 @@
         </div>
     </div>
 
-    <!-- Hint - Disappears on Click -->
-    <div id="hint" class="hint" onclick="startEverything()">
-        <div class="hint-emoji">🔊</div>
-        <div class="hint-text">Sentuh Layar<br/>Untuk Musik</div>
-    </div>
-
     <!-- Theme Buttons Always Visible -->
     <div class="themes">
         <button class="theme-btn" style="background: #10b981;" onclick="switchTheme('#064e3b', '#facc15', '#021511')" title="Hijau"></button>
@@ -304,25 +247,43 @@
         <button class="theme-btn" style="background: #f43f5e;" onclick="switchTheme('#9f1239', '#fda4af', '#1a0505')" title="Merah Muda"></button>
     </div>
 
-    <audio id="main-audio" loop preload="auto"><source src="https://cdn.pixabay.com/audio/2023/03/17/audio_0317e06571.mp3" type="audio/mpeg"></audio>
+    <audio id="main-audio" loop autoplay preload="auto"><source src="https://cdn.pixabay.com/audio/2023/03/17/audio_0317e06571.mp3" type="audio/mpeg"></audio>
     <audio id="pop" preload="auto"><source src="https://assets.mixkit.co/active_storage/sfx/2571/2571-preview.mp3" type="audio/mpeg"></audio>
 
     <script>
         var audioStarted = false;
         const mainAudio = document.getElementById('main-audio');
         
-        function startEverything() {
-            // Hide hint only
-            document.getElementById('hint').classList.add('hidden');
-            
-            // Play audio
-            if (mainAudio) {
+        function tryPlayAudio() {
+            if (mainAudio && !audioStarted) {
                 mainAudio.volume = 0.6;
-                mainAudio.play().catch(e => console.warn('Audio play error:', e));
-                audioStarted = true;
+                mainAudio.play().then(() => {
+                    audioStarted = true;
+                }).catch(e => {
+                    console.warn('Autoplay blocked. Waiting for interaction.');
+                });
             }
         }
         
+        // Try playing on load
+        window.addEventListener('load', tryPlayAudio);
+        
+        // Fallback: Play on any interaction (click, touch, scroll)
+        const startOnInteraction = () => {
+            if (!audioStarted) {
+                tryPlayAudio();
+            }
+            if (audioStarted) {
+                document.removeEventListener('click', startOnInteraction);
+                document.removeEventListener('touchstart', startOnInteraction);
+                document.removeEventListener('scroll', startOnInteraction);
+            }
+        };
+
+        document.addEventListener('click', startOnInteraction);
+        document.addEventListener('touchstart', startOnInteraction);
+        document.addEventListener('scroll', startOnInteraction);
+
         function switchTheme(p, a, b) {
             document.documentElement.style.setProperty('--theme-primary', p);
             document.documentElement.style.setProperty('--theme-accent', a);
@@ -434,6 +395,7 @@
             setInterval(updateMessage, 6000);
             setInterval(burst, 1000);
             animate();
+            tryPlayAudio();
         };
     </script>
 </body>
