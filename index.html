@@ -176,6 +176,35 @@
             transform: scale(0.95);
         }
         
+        /* Tap to Play Overlay - Only if autoplay fails */
+        #tap-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 100;
+            background: rgba(0,0,0,0.6);
+            backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            visibility: hidden;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+        
+        .tap-content {
+            text-align: center;
+            animation: pulse-scale 1.5s infinite;
+        }
+        
+        @keyframes pulse-scale {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+        
+        .tap-icon { font-size: 60px; margin-bottom: 20px; }
+        .tap-text { font-size: 18px; font-weight: 700; letter-spacing: 2px; color: #fbbf24; }
+
         /* Animations */
         @keyframes float { 
             0%, 100% { transform: translateY(0); } 
@@ -210,12 +239,19 @@
         }
     </style>
 </head>
-<body>
+<body onclick="startOnInteraction()" ontouchstart="startOnInteraction()">
     <div class="bg-layer">
         <div id="bg-gradient" class="absolute inset-0 opacity-50" style="background: radial-gradient(circle at 50% 50%, var(--theme-primary), transparent 80%);"></div>
     </div>
 
     <canvas id="fireworks"></canvas>
+
+    <div id="tap-overlay">
+        <div class="tap-content">
+            <div class="tap-icon">🔊</div>
+            <div class="tap-text">SENTUH UNTUK<br/>MEMULAI MUSIK</div>
+        </div>
+    </div>
 
     <!-- Card Always Visible -->
     <div class="card-wrapper">
@@ -247,42 +283,58 @@
         <button class="theme-btn" style="background: #f43f5e;" onclick="switchTheme('#9f1239', '#fda4af', '#1a0505')" title="Merah Muda"></button>
     </div>
 
-    <audio id="main-audio" loop autoplay preload="auto"><source src="https://archive.org/download/lp_middle-east-music-moods-of-the-casbah_soubhi-kochak-hakki-obadia-ensemble/05%20-%20Al%20Yooba%20%28Arabic%20Barn%20Dance%29.mp3" type="audio/mpeg"></audio>
-    <audio id="pop" preload="auto"><source src="https://assets.mixkit.co/active_storage/sfx/2571/2571-preview.mp3" type="audio/mpeg"></audio>
+    <audio id="main-audio" loop preload="auto">
+        <source src="https://archive.org/download/DabkeSoundsOfTheSyrianHouran/01%20Dabke%20Sounds%20of%20the%20Syrian%20Houran.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="pop" preload="auto">
+        <source src="https://assets.mixkit.co/active_storage/sfx/2571/2571-preview.mp3" type="audio/mpeg">
+    </audio>
 
     <script>
         var audioStarted = false;
         const mainAudio = document.getElementById('main-audio');
+        const tapOverlay = document.getElementById('tap-overlay');
         
         function tryPlayAudio() {
             if (mainAudio && !audioStarted) {
                 mainAudio.volume = 0.6;
                 mainAudio.play().then(() => {
                     audioStarted = true;
+                    hideOverlay();
                 }).catch(e => {
-                    console.warn('Autoplay blocked. Waiting for interaction.');
+                    console.warn('Autoplay blocked. Showing overlay.');
+                    showOverlay();
                 });
             }
         }
         
-        // Try playing on load
-        window.addEventListener('load', tryPlayAudio);
-        
-        // Fallback: Play on any interaction (click, touch, scroll)
-        const startOnInteraction = () => {
+        function showOverlay() {
+            tapOverlay.style.visibility = 'visible';
+            tapOverlay.style.opacity = '1';
+        }
+
+        function hideOverlay() {
+            tapOverlay.style.opacity = '0';
+            setTimeout(() => {
+                tapOverlay.style.visibility = 'hidden';
+            }, 500);
+        }
+
+        function startOnInteraction() {
             if (!audioStarted) {
                 tryPlayAudio();
             }
-            if (audioStarted) {
-                document.removeEventListener('click', startOnInteraction);
-                document.removeEventListener('touchstart', startOnInteraction);
-                document.removeEventListener('scroll', startOnInteraction);
-            }
-        };
+        }
 
-        document.addEventListener('click', startOnInteraction);
-        document.addEventListener('touchstart', startOnInteraction);
-        document.addEventListener('scroll', startOnInteraction);
+        // Try on load
+        window.onload = () => {
+            setInterval(updateMessage, 6000);
+            setInterval(burst, 1000);
+            animate();
+            
+            // Try to play immediately
+            tryPlayAudio();
+        };
 
         function switchTheme(p, a, b) {
             document.documentElement.style.setProperty('--theme-primary', p);
@@ -312,10 +364,7 @@
         const ctx = canvas.getContext('2d');
         let particles = [];
         
-        // Random animation types
-        const animationTypes = [
-            'pulse', 'flip', 'slide-in', 'fade-scale', 'wiggle'
-        ];
+        const animationTypes = ['pulse', 'flip', 'slide-in', 'fade-scale', 'wiggle'];
         
         function getRandomAnimation() {
             return animationTypes[Math.floor(Math.random() * animationTypes.length)];
@@ -341,28 +390,19 @@
 
         class Particle {
             constructor(x, y, color) {
-                this.x = x;
-                this.y = y;
-                this.color = color;
+                this.x = x; this.y = y; this.color = color;
                 this.radius = Math.random() * 2 + 0.5;
                 this.vx = (Math.random() - 0.5) * 10;
                 this.vy = (Math.random() - 0.5) * 10;
-                this.life = 100;
-                this.opacity = 1;
+                this.life = 100; this.opacity = 1;
             }
             draw() {
-                ctx.beginPath();
-                ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-                ctx.fillStyle = this.color;
-                ctx.globalAlpha = this.opacity;
-                ctx.fill();
+                ctx.beginPath(); ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+                ctx.fillStyle = this.color; ctx.globalAlpha = this.opacity; ctx.fill();
             }
             update() {
-                this.vy += 0.1;
-                this.x += this.vx;
-                this.y += this.vy;
-                this.life -= 2;
-                this.opacity = Math.max(0, this.life / 100);
+                this.vy += 0.1; this.x += this.vx; this.y += this.vy;
+                this.life -= 2; this.opacity = Math.max(0, this.life / 100);
             }
         }
 
@@ -383,20 +423,11 @@
 
         function animate() {
             ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--theme-bg').trim();
-            ctx.globalAlpha = 0.2;
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-            ctx.globalAlpha = 1;
+            ctx.globalAlpha = 0.2; ctx.fillRect(0, 0, canvas.width, canvas.height); ctx.globalAlpha = 1;
             particles = particles.filter(p => p.life > 0);
             particles.forEach(p => { p.update(); p.draw(); });
             requestAnimationFrame(animate);
         }
-
-        window.onload = () => {
-            setInterval(updateMessage, 6000);
-            setInterval(burst, 1000);
-            animate();
-            tryPlayAudio();
-        };
     </script>
 </body>
 </html>
