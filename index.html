@@ -7,67 +7,6 @@
     <link rel="icon" type="image/svg+xml" href="./favicon.svg">
     <link rel="stylesheet" href="./output.css">
     <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Plus+Jakarta+Sans:wght@300;400;600;800&family=Reem+Kufi:wght@700&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --theme-primary: #064e3b;
-            --theme-accent: #facc15;
-            --theme-bg: #021511;
-        }
-        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: var(--theme-bg); transition: background-color 0.5s ease; }
-        .font-arabic { font-family: 'Reem Kufi', sans-serif; }
-        .font-script { font-family: 'Dancing Script', cursive; }
-        
-        .glass {
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(25px);
-            -webkit-backdrop-filter: blur(25px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        @keyframes float {
-            0%, 100% { transform: translateY(0) rotate(0deg); }
-            50% { transform: translateY(-20px) rotate(1.5deg); }
-        }
-        .animate-float { animation: float 6s ease-in-out infinite; }
-        
-        #fireworks-canvas {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 5;
-            pointer-events: none;
-        }
-
-        .theme-btn {
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            cursor: pointer;
-            border: 2px solid rgba(255,255,255,0.3);
-            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-        .theme-btn:hover { transform: scale(1.2); border-color: white; }
-        
-        .mute-hint {
-            animation: bounceUp 2s infinite;
-        }
-        @keyframes bounceUp {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-5px); }
-        }
-        
-        #youtube-player {
-            position: absolute;
-            top: -100px;
-            left: -100px;
-            width: 1px;
-            height: 1px;
-            opacity: 0;
-            pointer-events: none;
-        }
-    </style>
 </head>
 <body class="text-white overflow-hidden select-none" onclick="startEverything()">
 
