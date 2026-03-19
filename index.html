@@ -7,22 +7,6 @@
     <meta name="description" content="Kartu ucapan Eid Mubarak interaktif dengan musik, animasi, dan pesan maaf yang penuh makna. Selamat Hari Raya Idul Fitri 1447 H! 🌙✨">
     <meta name="theme-color" content="#021511">
     
-    <!-- Open Graph untuk WhatsApp, Facebook, dll -->
-    <meta property="og:title" content="Eid Mubarak 1447 H">
-    <meta property="og:description" content="Kartu ucapan Eid Mubarak interaktif dengan musik, animasi, dan pesan bermakna. Maaf lahir batin! 🌙🙏">
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://natedekaka.github.io/ied_mubarak/">
-    <meta property="og:image" content="https://natedekaka.github.io/ied_mubarak/wa_status_frame.png">
-    <meta property="og:image:type" content="image/png">
-    <meta property="og:image:width" content="1200">
-    <meta property="og:image:height" content="630">
-    
-    <!-- Twitter Card -->
-    <meta name="twitter:card" content="summary">
-    <meta name="twitter:title" content="Eid Mubarak 1447 H">
-    <meta name="twitter:description" content="Kartu ucapan Eid Mubarak interaktif. Selamat Hari Raya! 🌙">
-    <meta name="twitter:image" content="https://natedekaka.github.io/ied_mubarak/favicon.svg">
-    
     <link rel="icon" type="image/svg+xml" href="./favicon.svg">
     <link rel="stylesheet" href="./output.css">
     <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Plus+Jakarta+Sans:wght@400;600;800&family=Reem+Kufi:wght@700&display=swap" rel="stylesheet">
@@ -71,6 +55,7 @@
             text-align: center; 
             box-shadow: 0 8px 32px rgba(0,0,0,0.3); 
             animation: float 6s ease-in-out infinite; 
+            overflow: hidden; /* Ensure content stays inside */
         }
         
         /* Desktop - Bigger Card */
@@ -89,7 +74,7 @@
         }
         
         .card-header { flex: 0 0 auto; }
-        .card-content { flex: 1; display: flex; flex-direction: column; justify-content: center; gap: 15px; }
+        .card-content { flex: 1; display: flex; flex-direction: column; justify-content: center; gap: 15px; position: relative; }
         .card-footer { flex: 0 0 auto; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 15px; }
         
         /* Typography - Mobile */
@@ -120,6 +105,7 @@
             display: flex; 
             align-items: center; 
             justify-content: center; 
+            position: relative;
         }
         .emoji { 
             font-size: 28px; 
@@ -247,31 +233,31 @@
             50% { transform: translate(-50%, -55%); } 
         }
         
-        /* Message animations - Gen Z vibes */
+        /* Message animations - Stay inside card */
         @keyframes pulse {
-            0% { opacity: 0; transform: scale(0.8); }
-            50% { transform: scale(1.05); }
+            0% { opacity: 0; transform: scale(0.95); }
+            50% { transform: scale(1.02); }
             100% { opacity: 1; transform: scale(1); }
         }
         
         @keyframes flip {
-            0% { opacity: 0; transform: rotateY(90deg); }
-            100% { opacity: 1; transform: rotateY(0deg); }
+            0% { opacity: 0; transform: rotateX(90deg); }
+            100% { opacity: 1; transform: rotateX(0deg); }
         }
         
         @keyframes slide-in {
-            0% { opacity: 0; transform: translateY(20px); }
+            0% { opacity: 0; transform: translateY(10px); }
             100% { opacity: 1; transform: translateY(0); }
         }
         
         @keyframes fade-scale {
-            0% { opacity: 0; transform: scale(0.5); }
+            0% { opacity: 0; transform: scale(0.8); }
             100% { opacity: 1; transform: scale(1); }
         }
         
         @keyframes wiggle {
-            0%, 100% { transform: skewX(-5deg); }
-            50% { transform: skewX(5deg); }
+            0%, 100% { transform: rotate(-2deg); }
+            50% { transform: rotate(2deg); }
         }
     </style>
 </head>
@@ -318,43 +304,25 @@
         <button class="theme-btn" style="background: #f43f5e;" onclick="switchTheme('#9f1239', '#fda4af', '#1a0505')" title="Merah Muda"></button>
     </div>
 
-    <div id="youtube"></div>
+    <audio id="main-audio" loop preload="auto"><source src="https://cdn.pixabay.com/audio/2023/03/17/audio_0317e06571.mp3" type="audio/mpeg"></audio>
     <audio id="pop" preload="auto"><source src="https://assets.mixkit.co/active_storage/sfx/2571/2571-preview.mp3" type="audio/mpeg"></audio>
 
     <script>
-        // YouTube Player Setup
-        var player, audioStarted = false;
-        
-        function onYouTubeIframeAPIReady() {
-            try {
-                player = new YT.Player('youtube', {
-                    height: 0, width: 0, videoId: 'lNxW0ndcybQ',
-                    playerVars: { autoplay: 1, loop: 1, playlist: 'lNxW0ndcybQ', controls: 0, modestbranding: 1, origin: window.location.origin, allow: 'autoplay' },
-                    events: { onReady: (e) => { e.target.mute(); e.target.playVideo(); } }
-                });
-            } catch (e) { console.warn('YouTube player error:', e); }
-        }
+        var audioStarted = false;
+        const mainAudio = document.getElementById('main-audio');
         
         function startEverything() {
             // Hide hint only
             document.getElementById('hint').classList.add('hidden');
             
-            // Unmute and play
-            if (player && typeof player.unMute === 'function') {
-                try {
-                    player.unMute();
-                    player.setVolume(60);
-                    audioStarted = true;
-                } catch (e) { console.warn(e); }
+            // Play audio
+            if (mainAudio) {
+                mainAudio.volume = 0.6;
+                mainAudio.play().catch(e => console.warn('Audio play error:', e));
+                audioStarted = true;
             }
         }
         
-        var tag = document.createElement('script');
-        tag.src = "https://www.youtube.com/iframe_api";
-        tag.async = true;
-        tag.onerror = () => { console.log('YouTube API failed to load, using local audio'); };
-        document.getElementsByTagName('script')[0].parentNode.insertBefore(tag, document.getElementsByTagName('script')[0]);
-
         function switchTheme(p, a, b) {
             document.documentElement.style.setProperty('--theme-primary', p);
             document.documentElement.style.setProperty('--theme-accent', a);
@@ -373,7 +341,7 @@
             "Setiap orang berhak dapat kesempatan kedua, kita juga pantas dapat, jadi open your heart dan terima maaf orang lain dengan tulus 🌸",
             "Yang paling sulit itu nggak minta maaf, tapi menerima maaf orang lain dan benar-benar melepaskan masa lalu dengan penuh pengertian 💯",
             "Maafin orang yang pernah sakit in hati itu bukan tentang mereka, tapi tentang kebebasan dan perdamaian untuk diri sendiri 🕊️✨",
-            "Di hari istimewa ini, jadilah versi diri yang lebih baik, lebih pemaaf, dan lebih siap untuk mulai chapter baru bersama orang-orang terkasih 🌟👑"
+            "Di hari istimewa ini, jadilah versi diri yang lebih baik, lebih pemaaf, and lebih siap untuk mulai chapter baru bersama orang-orang terkasih 🌟👑"
         ];
         
         let msgIdx = 0;
@@ -385,7 +353,7 @@
         
         // Random animation types
         const animationTypes = [
-            'pulse', 'bounce', 'flip', 'slide-in', 'fade-scale', 'wiggle'
+            'pulse', 'flip', 'slide-in', 'fade-scale', 'wiggle'
         ];
         
         function getRandomAnimation() {
