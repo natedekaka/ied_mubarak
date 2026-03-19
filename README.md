@@ -1,80 +1,80 @@
-# Ied Mubarak 1447 H 🌙
+# Eid Mubarak 1447 H 🌙
 
-Beautiful Islamic Eid greeting web application with interactive features.
+Halaman ucapan Lebaran yang cantik dan interaktif. Slay hari raya dengan vibes yang adem! ✨
 
-## 🎯 Features
+## 🎯 Fitur-Fitur Keren
 
-- 🎨 Multiple color themes (Emerald, Purple, Blue, Rose)
-- 🎆 Interactive fireworks animation
-- 🎵 YouTube background music player
-- 📱 Fully responsive design
-- 🌙 Glassmorphism UI
-- 💬 Rotating Gen-Z style messages
+- 🎨 **4 Pilihan Tema** - Hijau, Ungu, Biru, Rose (sesuai mood)
+- 🎆 **Kembang Api Animasi** - Ledakkan kebahagiaan terus-terusan
+- 🎵 **Musik Lagu Lebaran** - YouTube player tersembunyi (klik layar buat unmute)
+- 📱 **Responsive** - Buka di HP, tablet, laptop, aman semua
+- 🌙 **Glassmorphism UI** - Design modern yang adem dipandang
+- 💬 **Pesan Berputar** - Gen-Z banget, auto-rotate setiap 7.5 detik
 
-## 📋 Setup & Build
+## 🚀 Setup Cepat
 
-### Install Dependencies
+### 1. Install Dependencies
 ```bash
 npm install
 ```
 
-### Development (Watch CSS changes)
+### 2. Development Mode (Nonton perubahan live)
 ```bash
 npm run dev
 ```
 
-### Production Build (Minified CSS)
+### 3. Production Build (CSS sudah minified)
 ```bash
 npm run build
 ```
 
-### Deploy to GitHub Pages
+### 4. Push ke GitHub
 ```bash
 git push origin main
 ```
 
-Website is automatically deployed at: https://natedekaka.github.io/ied_mubarak/
+Website langsung live di: https://natedekaka.github.io/ied_mubarak/ 🎉
 
-## 🛠 Project Structure
+## 📁 Struktur File
 
 ```
 ied_mubarak/
-├── index.html           # Main HTML file
-├── style.css            # Tailwind input CSS
-├── output.css           # Compiled production CSS
-├── favicon.svg          # Favicon
-├── tailwind.config.js   # Tailwind configuration
-├── postcss.config.js    # PostCSS configuration
-├── package.json         # Dependencies & scripts
-└── README.md           # This file
+├── index.html           # File utama
+├── style.css            # CSS belum dicompile
+├── output.css           # CSS final (udah minified)
+├── favicon.svg          # Icon kecil di tab browser
+├── tailwind.config.js   # Setting Tailwind
+├── postcss.config.js    # Setting PostCSS
+├── package.json         # List dependency
+└── README.md            # File ini
 ```
 
-## 🐛 Fixed Issues
+## 🔧 Bug yang Udah Dibenerin
 
-- ✅ Replaced Tailwind CDN with production PostCSS build
-- ✅ Added favicon (fixed 404 error)
-- ✅ Minified CSS output for faster loading
-- ✅ Removed console warnings
+- ✅ Tailwind CDN → diubah jadi proper build pipeline (no more warning)
+- ✅ Favicon error 404 → ditambahin SVG favicon
+- ✅ CSS output → udah minified jadi lebih cepat loading
+- ✅ Console bersih → goodbye warning yang ganggu
 
-## 📦 Technologies
+## 📚 Tech Stack
 
 - HTML5
-- CSS3 + Tailwind CSS
-- Vanilla JavaScript
+- CSS3 + Tailwind CSS (production build)
+- JavaScript Vanilla
 - YouTube Iframe API
-- Google Fonts
+- Google Fonts (Dancing Script, Plus Jakarta Sans, Reem Kufi)
 
-## 🎓 Notes
+## 💡 Tips Pemakaian
 
-- Click anywhere on screen to unmute music
-- Customize themes by clicking color buttons
-- Fireworks trigger every 1.2 seconds
-- Messages rotate every 7.5 seconds
+- 🖱️ Klik dimanapun untuk unmute musik
+- 🎨 Klik tombol warna di atas buat ganti tema
+- 🎆 Kembang api nembak otomatis setiap 1.2 detik
+- 💬 Pesan berganti otomatis setiap 7.5 detik
 
-## 📄 License
+## 📄 Lisensi
 
 ISC
 
 ---
 
-Built with ❤️ by natedekaka
+Dibuat dengan ❤️ oleh natedekaka | Slay Lebaran! 🌙✨
