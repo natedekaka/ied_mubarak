@@ -9,43 +9,216 @@
     <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Plus+Jakarta+Sans:wght@400;600;800&family=Reem+Kufi:wght@700&display=swap" rel="stylesheet">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--theme-bg); color: white; overflow: hidden; }
-        .card-wrapper { display: flex; align-items: center; justify-content: center; width: 100vw; height: 100vh; padding: 20px; }
-        .card { width: 100%; max-width: 500px; aspect-ratio: 9/16; background: rgba(255,255,255,0.05); backdrop-filter: blur(25px); border: 1px solid rgba(255,255,255,0.1); border-radius: 30px; padding: 40px 30px; display: flex; flex-direction: column; justify-content: space-between; text-align: center; box-shadow: 0 8px 32px rgba(0,0,0,0.3); animation: float 6s ease-in-out infinite; }
-        .card-header { flex: 0; }
-        .card-content { flex: 1; display: flex; flex-direction: column; justify-content: center; gap: 20px; }
-        .card-footer { flex: 0; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px; }
-        .arabic-text { font-family: 'Reem Kufi', sans-serif; font-size: 20px; letter-spacing: 3px; margin-bottom: 15px; }
-        .title { font-family: 'Dancing Script', cursive; font-size: 48px; margin-bottom: 10px; font-weight: 700; }
-        .subtitle { font-size: 14px; letter-spacing: 2px; opacity: 0.8; margin-bottom: 10px; }
-        .message { font-size: 15px; line-height: 1.6; min-height: 60px; display: flex; align-items: center; justify-content: center; }
-        .emoji { font-size: 32px; margin-bottom: 10px; }
-        .name { font-size: 16px; font-weight: 700; letter-spacing: 2px; }
-        .themes { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); display: flex; gap: 12px; z-index: 50; background: rgba(255,255,255,0.05); backdrop-filter: blur(20px); padding: 12px 20px; border-radius: 50px; border: 1px solid rgba(255,255,255,0.1); }
-        .theme-btn { width: 28px; height: 28px; border-radius: 50%; cursor: pointer; border: 2px solid rgba(255,255,255,0.3); transition: all 0.3s ease; }
-        .theme-btn:hover { transform: scale(1.2); border-color: white; }
-        .hint { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 40; pointer-events: none; background: rgba(255,255,255,0.05); backdrop-filter: blur(20px); padding: 30px 40px; border-radius: 20px; border: 1px solid rgba(255,200,100,0.3); text-align: center; animation: bounce 2s infinite; }
-        .hint-emoji { font-size: 40px; margin-bottom: 10px; }
-        .hint-text { font-size: 14px; letter-spacing: 1px; color: #fbbf24; }
-        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
-        @keyframes bounce { 0%, 100% { transform: translate(-50%, -50%); } 50% { transform: translate(-50%, -55%); } }
-        @media (max-width: 640px) {
-            .card { aspect-ratio: 1 / 1.4; padding: 30px 20px; }
-            .arabic-text { font-size: 16px; }
-            .title { font-size: 36px; }
-            .subtitle { font-size: 12px; }
-            .message { font-size: 13px; }
-            .emoji { font-size: 24px; }
-            .themes { bottom: 20px; padding: 10px 16px; gap: 10px; }
-            .theme-btn { width: 24px; height: 24px; }
-            .hint { padding: 20px 30px; }
-            .hint-emoji { font-size: 32px; }
-            .hint-text { font-size: 12px; }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--theme-bg); color: white; overflow: hidden; width: 100vw; height: 100vh; }
+        
+        /* Main Container */
+        .card-wrapper { 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            width: 100%; 
+            height: 100%; 
+            padding: 15px;
+        }
+        
+        /* Card Styling */
+        .card { 
+            width: 100%;
+            max-width: 450px;
+            aspect-ratio: 9 / 16;
+            background: rgba(255,255,255,0.05); 
+            backdrop-filter: blur(25px); 
+            border: 1px solid rgba(255,255,255,0.1); 
+            border-radius: 25px; 
+            padding: 35px 25px;
+            display: flex; 
+            flex-direction: column; 
+            justify-content: space-between; 
+            text-align: center; 
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3); 
+            animation: float 6s ease-in-out infinite; 
+            transition: all 0.3s ease;
+        }
+        
+        /* Desktop - Bigger Card */
+        @media (min-width: 1024px) {
+            .card {
+                max-width: 600px;
+                aspect-ratio: auto;
+                width: 550px;
+                height: 700px;
+                padding: 60px 40px;
+                border-radius: 35px;
+                box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+            }
+        }
+        
+        .card-header { flex: 0 0 auto; }
+        .card-content { flex: 1; display: flex; flex-direction: column; justify-content: center; gap: 15px; }
+        .card-footer { flex: 0 0 auto; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 15px; }
+        
+        /* Typography - Mobile */
+        .arabic-text { 
+            font-family: 'Reem Kufi', sans-serif; 
+            font-size: 18px; 
+            letter-spacing: 3px; 
+            margin-bottom: 10px;
+            opacity: 0.9;
+        }
+        .title { 
+            font-family: 'Dancing Script', cursive; 
+            font-size: 42px; 
+            margin-bottom: 8px; 
+            font-weight: 700; 
+            line-height: 1.2;
+        }
+        .subtitle { 
+            font-size: 12px; 
+            letter-spacing: 2px; 
+            opacity: 0.7; 
+            margin-bottom: 8px; 
+        }
+        .message { 
+            font-size: 14px; 
+            line-height: 1.5; 
+            min-height: 50px; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+        }
+        .emoji { 
+            font-size: 28px; 
+            margin-bottom: 8px; 
+        }
+        .name { 
+            font-size: 14px; 
+            font-weight: 700; 
+            letter-spacing: 2px; 
+        }
+        
+        /* Typography - Desktop */
+        @media (min-width: 1024px) {
+            .arabic-text { font-size: 28px; margin-bottom: 15px; }
+            .title { font-size: 60px; margin-bottom: 12px; }
+            .subtitle { font-size: 14px; margin-bottom: 12px; }
+            .message { font-size: 18px; min-height: 70px; }
+            .emoji { font-size: 40px; margin-bottom: 12px; }
+            .name { font-size: 18px; }
+        }
+        
+        /* Theme Buttons */
+        .themes { 
+            position: fixed; 
+            bottom: 25px; 
+            left: 50%; 
+            transform: translateX(-50%); 
+            display: flex; 
+            gap: 12px; 
+            z-index: 50; 
+            background: rgba(255,255,255,0.05); 
+            backdrop-filter: blur(20px); 
+            padding: 12px 18px; 
+            border-radius: 50px; 
+            border: 1px solid rgba(255,255,255,0.1); 
+            transition: all 0.3s ease;
+        }
+        
+        @media (min-width: 1024px) {
+            .themes {
+                bottom: 40px;
+                gap: 16px;
+                padding: 14px 24px;
+            }
+        }
+        
+        .theme-btn { 
+            width: 26px; 
+            height: 26px; 
+            border-radius: 50%; 
+            cursor: pointer; 
+            border: 2px solid rgba(255,255,255,0.3); 
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        
+        @media (min-width: 1024px) {
+            .theme-btn {
+                width: 32px;
+                height: 32px;
+            }
+        }
+        
+        .theme-btn:hover { 
+            transform: scale(1.15); 
+            border-color: white; 
+        }
+        
+        .theme-btn:active {
+            transform: scale(0.95);
+        }
+        
+        /* Hint */
+        .hint { 
+            position: fixed; 
+            top: 50%; 
+            left: 50%; 
+            transform: translate(-50%, -50%); 
+            z-index: 40; 
+            pointer-events: none; 
+            background: rgba(255,255,255,0.05); 
+            backdrop-filter: blur(20px); 
+            padding: 28px 36px; 
+            border-radius: 20px; 
+            border: 1px solid rgba(255,200,100,0.3); 
+            text-align: center; 
+            animation: bounce 2s infinite; 
+        }
+        
+        @media (min-width: 1024px) {
+            .hint {
+                padding: 40px 50px;
+                border-radius: 30px;
+            }
+        }
+        
+        .hint-emoji { 
+            font-size: 36px; 
+            margin-bottom: 10px; 
+        }
+        
+        @media (min-width: 1024px) {
+            .hint-emoji { font-size: 48px; margin-bottom: 15px; }
+        }
+        
+        .hint-text { 
+            font-size: 13px; 
+            letter-spacing: 1px; 
+            color: #fbbf24; 
+        }
+        
+        @media (min-width: 1024px) {
+            .hint-text { font-size: 16px; letter-spacing: 1.5px; }
+        }
+        
+        /* Animations */
+        @keyframes float { 
+            0%, 100% { transform: translateY(0); } 
+            50% { transform: translateY(-8px); } 
+        }
+        @keyframes bounce { 
+            0%, 100% { transform: translate(-50%, -50%); } 
+            50% { transform: translate(-50%, -55%); } 
+        }
+        
+        /* Background */
+        .bg-layer {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
         }
     </style>
 </head>
 <body onclick="startEverything()">
-    <div class="fixed inset-0 z-0">
+    <div class="bg-layer">
         <div id="bg-gradient" class="absolute inset-0 opacity-50" style="background: radial-gradient(circle at 50% 50%, var(--theme-primary), transparent 80%);"></div>
     </div>
 
@@ -78,10 +251,10 @@
     </div>
 
     <div class="themes">
-        <button class="theme-btn" style="background: #10b981;" onclick="switchTheme('#064e3b', '#facc15', '#021511')"></button>
-        <button class="theme-btn" style="background: #a855f7;" onclick="switchTheme('#4c1d95', '#fbbf24', '#0f0720')"></button>
-        <button class="theme-btn" style="background: #3b82f6;" onclick="switchTheme('#1e3a8a', '#60a5fa', '#050b1a')"></button>
-        <button class="theme-btn" style="background: #f43f5e;" onclick="switchTheme('#9f1239', '#fda4af', '#1a0505')"></button>
+        <button class="theme-btn" style="background: #10b981;" onclick="switchTheme('#064e3b', '#facc15', '#021511')" title="Hijau"></button>
+        <button class="theme-btn" style="background: #a855f7;" onclick="switchTheme('#4c1d95', '#fbbf24', '#0f0720')" title="Ungu"></button>
+        <button class="theme-btn" style="background: #3b82f6;" onclick="switchTheme('#1e3a8a', '#60a5fa', '#050b1a')" title="Biru"></button>
+        <button class="theme-btn" style="background: #f43f5e;" onclick="switchTheme('#9f1239', '#fda4af', '#1a0505')" title="Merah Muda"></button>
     </div>
 
     <div id="youtube"></div>
@@ -89,6 +262,7 @@
 
     <script>
         var player, audioStarted = false;
+        
         function onYouTubeIframeAPIReady() {
             try {
                 player = new YT.Player('youtube', {
@@ -98,6 +272,7 @@
                 });
             } catch (e) { console.warn(e); }
         }
+        
         function startEverything() {
             if (player && typeof player.unMute === 'function') {
                 player.unMute();
@@ -106,6 +281,7 @@
                 audioStarted = true;
             }
         }
+        
         var tag = document.createElement('script');
         tag.src = "https://www.youtube.com/iframe_api";
         document.getElementsByTagName('script')[0].parentNode.insertBefore(tag, document.getElementsByTagName('script')[0]);
@@ -126,6 +302,7 @@
             "Let's start a new chapter! 🍃",
             "Hati kudu glowing lahir batin! 🤲"
         ];
+        
         let msgIdx = 0;
         const msgEl = document.getElementById('message');
         const popAudio = document.getElementById('pop');
