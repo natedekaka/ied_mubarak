@@ -12,7 +12,10 @@
     <meta property="og:description" content="Kartu ucapan Eid Mubarak interaktif dengan musik, animasi, dan pesan bermakna. Maaf lahir batin! 🌙🙏">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://natedekaka.github.io/ied_mubarak/">
-    <meta property="og:image" content="https://natedekaka.github.io/ied_mubarak/favicon.svg">
+    <meta property="og:image" content="https://natedekaka.github.io/ied_mubarak/wa_status_frame.png">
+    <meta property="og:image:type" content="image/png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
     
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary">
@@ -325,11 +328,11 @@
         function onYouTubeIframeAPIReady() {
             try {
                 player = new YT.Player('youtube', {
-                    height: 0, width: 0, videoId: 'EoSnWjLnhUE',
-                    playerVars: { autoplay: 1, loop: 1, playlist: 'EoSnWjLnhUE', controls: 0, modestbranding: 1, origin: window.location.origin },
+                    height: 0, width: 0, videoId: 'dQw4w9WgXcQ',
+                    playerVars: { autoplay: 1, loop: 1, playlist: 'dQw4w9WgXcQ', controls: 0, modestbranding: 1, origin: window.location.origin, allow: 'autoplay' },
                     events: { onReady: (e) => { e.target.mute(); e.target.playVideo(); } }
                 });
-            } catch (e) { console.warn(e); }
+            } catch (e) { console.warn('YouTube player error:', e); }
         }
         
         function startEverything() {
@@ -348,6 +351,8 @@
         
         var tag = document.createElement('script');
         tag.src = "https://www.youtube.com/iframe_api";
+        tag.async = true;
+        tag.onerror = () => { console.log('YouTube API failed to load, using local audio'); };
         document.getElementsByTagName('script')[0].parentNode.insertBefore(tag, document.getElementsByTagName('script')[0]);
 
         function switchTheme(p, a, b) {
