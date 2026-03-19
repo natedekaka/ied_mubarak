@@ -1,0 +1,29 @@
+{
+  "name": "ied_mubarak",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "@tailwindcss/cli -i ./style.css -o ./output.css --minify",
+    "dev": "@tailwindcss/cli -i ./style.css -o ./output.css --watch"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/natedekaka/ied_mubarak.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/natedekaka/ied_mubarak/issues"
+  },
+  "homepage": "https://github.com/natedekaka/ied_mubarak#readme",
+  "devDependencies": {
+    "@tailwindcss/cli": "^4.2.2",
+    "autoprefixer": "^10.4.27",
+    "postcss": "^8.5.8",
+    "tailwindcss": "^4.2.2",
+    "tailwindcss-cli": "^0.1.2"
+  }
+}
